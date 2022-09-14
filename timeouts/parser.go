@@ -8,6 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
+// Create interrogates the supplied types.Object and if the object.Attrs contains an
+// entry for "create" that can be parsed then *time.Duration is returned.
 func Create(ctx context.Context, obj types.Object) (*time.Duration, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -42,6 +44,8 @@ func Create(ctx context.Context, obj types.Object) (*time.Duration, diag.Diagnos
 	return &duration, nil
 }
 
+// CreateDefault returns time.Duration generated from parsing the "create" value in obj.Attrs
+// or the supplied default if "create" cannot be found or parsed.
 func CreateDefault(ctx context.Context, obj types.Object, def time.Duration) time.Duration {
 	duration, diags := Create(ctx, obj)
 
@@ -52,6 +56,8 @@ func CreateDefault(ctx context.Context, obj types.Object, def time.Duration) tim
 	return *duration
 }
 
+// Read interrogates the supplied types.Object and if the object.Attrs contains an
+// entry for "read" that can be parsed then *time.Duration is returned.
 func Read(ctx context.Context, obj types.Object) (*time.Duration, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -86,6 +92,8 @@ func Read(ctx context.Context, obj types.Object) (*time.Duration, diag.Diagnosti
 	return &duration, nil
 }
 
+// ReadDefault returns time.Duration generated from parsing the "read" value in obj.Attrs
+// or the supplied default if "read" cannot be found or parsed.
 func ReadDefault(ctx context.Context, obj types.Object, def time.Duration) time.Duration {
 	duration, diags := Read(ctx, obj)
 
@@ -96,6 +104,8 @@ func ReadDefault(ctx context.Context, obj types.Object, def time.Duration) time.
 	return *duration
 }
 
+// Update interrogates the supplied types.Object and if the object.Attrs contains an
+// entry for "update" that can be parsed then *time.Duration is returned.
 func Update(ctx context.Context, obj types.Object) (*time.Duration, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -130,6 +140,8 @@ func Update(ctx context.Context, obj types.Object) (*time.Duration, diag.Diagnos
 	return &duration, nil
 }
 
+// UpdateDefault returns time.Duration generated from parsing the "update" value in obj.Attrs
+// or the supplied default if "update" cannot be found or parsed.
 func UpdateDefault(ctx context.Context, obj types.Object, def time.Duration) time.Duration {
 	duration, diags := Update(ctx, obj)
 
@@ -140,6 +152,8 @@ func UpdateDefault(ctx context.Context, obj types.Object, def time.Duration) tim
 	return *duration
 }
 
+// Delete interrogates the supplied types.Object and if the object.Attrs contains an
+// entry for "delete" that can be parsed then *time.Duration is returned.
 func Delete(ctx context.Context, obj types.Object) (*time.Duration, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -174,6 +188,8 @@ func Delete(ctx context.Context, obj types.Object) (*time.Duration, diag.Diagnos
 	return &duration, nil
 }
 
+// DeleteDefault returns time.Duration generated from parsing the "delete" value in obj.Attrs
+// or the supplied default if "delete" cannot be found or parsed.
 func DeleteDefault(ctx context.Context, obj types.Object, def time.Duration) time.Duration {
 	duration, diags := Delete(ctx, obj)
 
