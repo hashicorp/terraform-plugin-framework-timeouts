@@ -1,0 +1,3 @@
+```release-note:feature
+Introduced `timeouts` package with `Block()`, `BlockAll()`, `Attributes()` and `AttributesAll()` schema mutation functions
+```
