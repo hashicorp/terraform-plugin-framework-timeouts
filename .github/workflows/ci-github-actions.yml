@@ -19,6 +19,6 @@ jobs:
         run: echo "::set-output name=version::$(cat ./.go-version)"
       - uses: actions/setup-go@v3
         with:
-          go-version: ${{ steps.go-version.outputs.version }}
+          go-version-file: 'go.mod'
       - run: go install github.com/rhysd/actionlint/cmd/actionlint@latest
       - run: actionlint
