@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts"
 )
 
@@ -35,6 +36,9 @@ func TestBlock(t *testing.T) {
 					"create": {
 						Type:     types.StringType,
 						Optional: true,
+						Validators: []tfsdk.AttributeValidator{
+							validators.TimeDuration(),
+						},
 					},
 				},
 				NestingMode: tfsdk.BlockNestingModeSingle,
@@ -50,10 +54,16 @@ func TestBlock(t *testing.T) {
 					"create": {
 						Type:     types.StringType,
 						Optional: true,
+						Validators: []tfsdk.AttributeValidator{
+							validators.TimeDuration(),
+						},
 					},
 					"update": {
 						Type:     types.StringType,
 						Optional: true,
+						Validators: []tfsdk.AttributeValidator{
+							validators.TimeDuration(),
+						},
 					},
 				},
 				NestingMode: tfsdk.BlockNestingModeSingle,
@@ -83,18 +93,30 @@ func TestBlockAll(t *testing.T) {
 			"create": {
 				Type:     types.StringType,
 				Optional: true,
+				Validators: []tfsdk.AttributeValidator{
+					validators.TimeDuration(),
+				},
 			},
 			"read": {
 				Type:     types.StringType,
 				Optional: true,
+				Validators: []tfsdk.AttributeValidator{
+					validators.TimeDuration(),
+				},
 			},
 			"update": {
 				Type:     types.StringType,
 				Optional: true,
+				Validators: []tfsdk.AttributeValidator{
+					validators.TimeDuration(),
+				},
 			},
 			"delete": {
 				Type:     types.StringType,
 				Optional: true,
+				Validators: []tfsdk.AttributeValidator{
+					validators.TimeDuration(),
+				},
 			},
 		},
 		NestingMode: tfsdk.BlockNestingModeSingle,
@@ -130,6 +152,9 @@ func TestAttributes(t *testing.T) {
 					"create": {
 						Type:     types.StringType,
 						Optional: true,
+						Validators: []tfsdk.AttributeValidator{
+							validators.TimeDuration(),
+						},
 					},
 				}),
 			},
@@ -145,10 +170,16 @@ func TestAttributes(t *testing.T) {
 					"create": {
 						Type:     types.StringType,
 						Optional: true,
+						Validators: []tfsdk.AttributeValidator{
+							validators.TimeDuration(),
+						},
 					},
 					"update": {
 						Type:     types.StringType,
 						Optional: true,
+						Validators: []tfsdk.AttributeValidator{
+							validators.TimeDuration(),
+						},
 					},
 				}),
 			},
@@ -178,18 +209,30 @@ func TestAttributesAll(t *testing.T) {
 			"create": {
 				Type:     types.StringType,
 				Optional: true,
+				Validators: []tfsdk.AttributeValidator{
+					validators.TimeDuration(),
+				},
 			},
 			"read": {
 				Type:     types.StringType,
 				Optional: true,
+				Validators: []tfsdk.AttributeValidator{
+					validators.TimeDuration(),
+				},
 			},
 			"update": {
 				Type:     types.StringType,
 				Optional: true,
+				Validators: []tfsdk.AttributeValidator{
+					validators.TimeDuration(),
+				},
 			},
 			"delete": {
 				Type:     types.StringType,
 				Optional: true,
+				Validators: []tfsdk.AttributeValidator{
+					validators.TimeDuration(),
+				},
 			},
 		}),
 	}

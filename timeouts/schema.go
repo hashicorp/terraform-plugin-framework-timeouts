@@ -5,6 +5,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
 )
 
 const (
@@ -78,7 +80,9 @@ func attributesMap(opts Opts) map[string]tfsdk.Attribute {
 		attributes[create] = tfsdk.Attribute{
 			Type:     types.StringType,
 			Optional: true,
-			// TODO: Add Validators: for checking that string parses as time.Duration
+			Validators: []tfsdk.AttributeValidator{
+				validators.TimeDuration(),
+			},
 		}
 	}
 
@@ -86,24 +90,27 @@ func attributesMap(opts Opts) map[string]tfsdk.Attribute {
 		attributes[read] = tfsdk.Attribute{
 			Type:     types.StringType,
 			Optional: true,
-			// TODO: Add Validators: for checking that string parses as time.Duration
-		}
+			Validators: []tfsdk.AttributeValidator{
+				validators.TimeDuration(),
+			}}
 	}
 
 	if opts.Update {
 		attributes[update] = tfsdk.Attribute{
 			Type:     types.StringType,
 			Optional: true,
-			// TODO: Add Validators: for checking that string parses as time.Duration
-		}
+			Validators: []tfsdk.AttributeValidator{
+				validators.TimeDuration(),
+			}}
 	}
 
 	if opts.Delete {
 		attributes[del] = tfsdk.Attribute{
 			Type:     types.StringType,
 			Optional: true,
-			// TODO: Add Validators: for checking that string parses as time.Duration
-		}
+			Validators: []tfsdk.AttributeValidator{
+				validators.TimeDuration(),
+			}}
 	}
 
 	return attributes
