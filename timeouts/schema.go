@@ -75,42 +75,28 @@ func AttributesAll(ctx context.Context) tfsdk.Attribute {
 
 func attributesMap(opts Opts) map[string]tfsdk.Attribute {
 	attributes := map[string]tfsdk.Attribute{}
+	attribute := tfsdk.Attribute{
+		Type:     types.StringType,
+		Optional: true,
+		Validators: []tfsdk.AttributeValidator{
+			validators.TimeDuration(),
+		},
+	}
 
 	if opts.Create {
-		attributes[create] = tfsdk.Attribute{
-			Type:     types.StringType,
-			Optional: true,
-			Validators: []tfsdk.AttributeValidator{
-				validators.TimeDuration(),
-			},
-		}
+		attributes[create] = attribute
 	}
 
 	if opts.Read {
-		attributes[read] = tfsdk.Attribute{
-			Type:     types.StringType,
-			Optional: true,
-			Validators: []tfsdk.AttributeValidator{
-				validators.TimeDuration(),
-			}}
+		attributes[read] = attribute
 	}
 
 	if opts.Update {
-		attributes[update] = tfsdk.Attribute{
-			Type:     types.StringType,
-			Optional: true,
-			Validators: []tfsdk.AttributeValidator{
-				validators.TimeDuration(),
-			}}
+		attributes[update] = attribute
 	}
 
 	if opts.Delete {
-		attributes[del] = tfsdk.Attribute{
-			Type:     types.StringType,
-			Optional: true,
-			Validators: []tfsdk.AttributeValidator{
-				validators.TimeDuration(),
-			}}
+		attributes[del] = attribute
 	}
 
 	return attributes
