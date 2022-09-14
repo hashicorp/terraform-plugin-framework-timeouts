@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Set Issue to 'Priority = Triage Next'"
-        uses: leonsteinhaeuser/:@v2.0.0
+        uses: leonsteinhaeuser/project-beta-automations@v2.0.0
         if: github.event_name == 'issues'
         with:
           gh_token: ${{ secrets.TF_DEVEX_PROJECT_GITHUB_TOKEN }}
