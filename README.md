@@ -14,6 +14,122 @@ This Go module follows `terraform-plugin-framework` Go compatibility.
 
 Currently that means Go **1.18** must be used when developing and testing code.
 
+## Usage
+
+Usage of this module requires the following changes in the provider code:
+
+- [Schema Mutation](#schema-mutation)
+- [Updating Models](#updating-models)
+- Accessing Timeouts in CRUD Functions
+
+### Schema Mutation
+
+#### Block
+
+If your configuration is using a nested block to define timeouts, such as the following:
+
+```terraform
+resource "timeouts_example" "example" {
+  /* ... */
+
+  timeouts {
+    create = "60m"
+  }
+}
+```
+
+You can use this module to mutate the `tfsdk.Schema` as follows:
+
+```go
+func (t *exampleResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
+    return tfsdk.Schema{
+        /* ... */
+
+        Blocks: map[string]tfsdk.Block{
+            "timeouts": timeouts.Block(ctx, timeouts.Opts{
+                Create: true,
+            }),
+        },
+```
+
+#### Attribute 
+
+```terraform
+resource "timeouts_example" "example" {
+  /* ... */
+
+  timeouts = {
+    create = "60m"
+  }
+}
+```
+
+You can use this module to mutate the `tfsdk.Schema` as follows:
+
+```go
+func (t *exampleResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
+    return tfsdk.Schema{
+        Attributes: map[string]tfsdk.Attribute{
+            /* ... */
+			"timeouts": timeouts.Attributes(ctx, timeouts.Opts{
+                Create: true,
+			}),
+        },
+```
+
+### Updating Models
+
+In functions in which the config, state or plan is being unmarshalled, for instance, the `Create` function:
+
+```go
+func (r exampleResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data exampleResourceData
+
+	diags := req.Config.Get(ctx, &data)
+	resp.Diagnostics.Append(diags...)
+```
+
+The model that is being used, `exampleResourceData` in this example, will need to be modified to include a field for
+timeouts which is of `types.Object`. For example:
+
+```go
+type exampleResourceData struct {
+    /* ... */
+	Timeouts    types.Object `tfsdk:"timeouts"`
+```
+
+### Accessing Timeouts in CRUD Functions
+
+Once the model has been populated with the config, state or plan the duration of the timeout can be accessed by calling
+the appropriate helper function and then used to configure timeout behaviour, for instance:
+
+```go
+func (r exampleResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+    var data exampleResourceData
+
+    diags := req.Config.Get(ctx, &data)
+    resp.Diagnostics.Append(diags...)
+    if resp.Diagnostics.HasError() {
+        return
+    }
+
+    createTimeout, diags := timeouts.Create(ctx, data.Timeouts)
+    resp.Diagnostics.Append(diags...)
+    if resp.Diagnostics.HasError() {
+        return
+    }
+
+	if createTimeout == nil {
+        /* ... */
+    }
+	
+    ctx, cancel := context.WithTimeout(ctx, *createTimeout)
+    defer cancel()
+
+    /* ... */
+}
+```
+
 ## Contributing
 
 See [`.github/CONTRIBUTING.md`](https://github.com/hashicorp/terraform-plugin-framework-timeouts/blob/main/.github/CONTRIBUTING.md)
