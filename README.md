@@ -20,7 +20,7 @@ Usage of this module requires the following changes in the provider code:
 
 - [Schema Mutation](#schema-mutation)
 - [Updating Models](#updating-models)
-- Accessing Timeouts in CRUD Functions
+- [Accessing Timeouts in CRUD Functions](#accessing-timeouts-in-crud-functions)
 
 ### Schema Mutation
 
@@ -54,6 +54,8 @@ func (t *exampleResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Dia
 
 #### Attribute 
 
+If your configuration is using nested attributes to define timeouts, such as the following:
+
 ```terraform
 resource "timeouts_example" "example" {
   /* ... */
@@ -71,9 +73,9 @@ func (t *exampleResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Dia
     return tfsdk.Schema{
         Attributes: map[string]tfsdk.Attribute{
             /* ... */
-			"timeouts": timeouts.Attributes(ctx, timeouts.Opts{
+            "timeouts": timeouts.Attributes(ctx, timeouts.Opts{
                 Create: true,
-			}),
+            }),
         },
 ```
 
@@ -95,7 +97,7 @@ timeouts which is of `types.Object`. For example:
 ```go
 type exampleResourceData struct {
     /* ... */
-	Timeouts    types.Object `tfsdk:"timeouts"`
+    Timeouts    types.Object `tfsdk:"timeouts"`
 ```
 
 ### Accessing Timeouts in CRUD Functions
@@ -119,7 +121,7 @@ func (r exampleResource) Create(ctx context.Context, req resource.CreateRequest,
         return
     }
 
-	if createTimeout == nil {
+    if createTimeout == nil {
         /* ... */
     }
 	
