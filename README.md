@@ -126,17 +126,14 @@ func (r exampleResource) Create(ctx context.Context, req resource.CreateRequest,
     }
 
 	defaultCreateTimeout := 20 * time.Minutes
+	
     createTimeout, diags := timeouts.Create(ctx, data.Timeouts, defaultCreateTimeout)
     resp.Diagnostics.Append(diags...)
     if resp.Diagnostics.HasError() {
         return
     }
 
-    if createTimeout == nil {
-        /* ... */
-    }
-	
-    ctx, cancel := context.WithTimeout(ctx, *createTimeout)
+    ctx, cancel := context.WithTimeout(ctx, createTimeout)
     defer cancel()
 
     /* ... */
