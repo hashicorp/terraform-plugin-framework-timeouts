@@ -10,10 +10,10 @@ import (
 )
 
 const (
-	create = "create"
-	read   = "read"
-	update = "update"
-	del    = "delete"
+	attributeNameCreate = "create"
+	attributeNameRead   = "read"
+	attributeNameUpdate = "update"
+	attributeNameDelete = "delete"
 )
 
 // Opts is used as an argument to Block and Attributes to indicate which attributes
@@ -84,19 +84,19 @@ func attributesMap(opts Opts) map[string]tfsdk.Attribute {
 	}
 
 	if opts.Create {
-		attributes[create] = attribute
+		attributes[attributeNameCreate] = attribute
 	}
 
 	if opts.Read {
-		attributes[read] = attribute
+		attributes[attributeNameRead] = attribute
 	}
 
 	if opts.Update {
-		attributes[update] = attribute
+		attributes[attributeNameUpdate] = attribute
 	}
 
 	if opts.Delete {
-		attributes[del] = attribute
+		attributes[attributeNameDelete] = attribute
 	}
 
 	return attributes

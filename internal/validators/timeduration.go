@@ -2,9 +2,8 @@ package validators
 
 import (
 	"context"
+	"fmt"
 	"time"
-	"unicode"
-	"unicode/utf8"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
@@ -19,7 +18,7 @@ type timeDurationValidator struct {
 
 // Description describes the validation in plain text formatting.
 func (validator timeDurationValidator) Description(_ context.Context) string {
-	return "string must be parseable as time.Duration"
+	return `must be a string containing a sequence of decimal numbers, each with optional fraction and a unit suffix, such as "300ms", "-1.5h" or "2h45m". Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".`
 }
 
 // MarkdownDescription describes the validation in Markdown formatting.
@@ -39,7 +38,8 @@ func (validator timeDurationValidator) Validate(ctx context.Context, request tfs
 		response.Diagnostics.Append(diag.NewAttributeErrorDiagnostic(
 			request.AttributePath,
 			"Invalid Attribute Value Time Duration",
-			capitalize(validator.Description(ctx))+", got: "+s.Value))
+			fmt.Sprintf("%q %s", s.Value, validator.Description(ctx))),
+		)
 		return
 	}
 }
@@ -52,15 +52,4 @@ func (validator timeDurationValidator) Validate(ctx context.Context, request tfs
 // Null (unconfigured) and unknown (known after apply) values are skipped.
 func TimeDuration() tfsdk.AttributeValidator {
 	return timeDurationValidator{}
-}
-
-// capitalize will uppercase the first letter in a UTF-8 string.
-func capitalize(str string) string {
-	if str == "" {
-		return ""
-	}
-
-	firstRune, size := utf8.DecodeRuneInString(str)
-
-	return string(unicode.ToUpper(firstRune)) + str[size:]
 }

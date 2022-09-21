@@ -12,7 +12,7 @@ This Go module is typically kept up to date with the latest `terraform-plugin-fr
 
 This Go module follows `terraform-plugin-framework` Go compatibility.
 
-Currently that means Go **1.18** must be used when developing and testing code.
+Currently, that means Go **1.18** must be used when developing and testing code.
 
 ## Usage
 
@@ -23,6 +23,16 @@ Usage of this module requires the following changes in the provider code:
 - [Accessing Timeouts in CRUD Functions](#accessing-timeouts-in-crud-functions)
 
 ### Schema Mutation
+
+Timeouts can be defined using either nested blocks or nested attributes.
+
+If you are writing a new provider using [terraform-plugin-framework](https://github.com/hashicorp/terraform-plugin-framework)
+then we recommend using nested attributes.
+
+If you are [migrating a provider from SDKv2 to the Framework](https://www.terraform.io/plugin/framework/migrating) and 
+you are already using timeouts you can either continue to use block syntax, or switch to using nested attributes. 
+However, switching to using nested attributes will require that practitioners that are using your provider update their
+Terraform configuration.
 
 #### Block
 
@@ -87,7 +97,7 @@ In functions in which the config, state or plan is being unmarshalled, for insta
 func (r exampleResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data exampleResourceData
 
-	diags := req.Config.Get(ctx, &data)
+	diags := req.Plan.Get(ctx, &data)
 	resp.Diagnostics.Append(diags...)
 ```
 
@@ -109,13 +119,14 @@ the appropriate helper function and then used to configure timeout behaviour, fo
 func (r exampleResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
     var data exampleResourceData
 
-    diags := req.Config.Get(ctx, &data)
+    diags := req.Plan.Get(ctx, &data)
     resp.Diagnostics.Append(diags...)
     if resp.Diagnostics.HasError() {
         return
     }
 
-    createTimeout, diags := timeouts.Create(ctx, data.Timeouts)
+	defaultCreateTimeout := 20 * time.Minutes
+    createTimeout, diags := timeouts.Create(ctx, data.Timeouts, defaultCreateTimeout)
     resp.Diagnostics.Append(diags...)
     if resp.Diagnostics.HasError() {
         return
