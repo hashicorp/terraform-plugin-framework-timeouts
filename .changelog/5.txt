@@ -1,3 +1,7 @@
 ```release-note:feature
-Introduced `timeouts` package with `Block()`, `BlockAll()`, `Attributes()` and `AttributesAll()` schema mutation functions
+Introduced `timeouts` package with `Block()`, `BlockAll()`, `Attributes()` and `AttributesAll()` schema mutation functions and `Create()`, `Read()`, `Update()` and `Delete()` object parsing functions
+```
+
+```release-note:feature
+Introduced `validators` package with `TimeDuration()` function to obtain time duration validator
 ```
