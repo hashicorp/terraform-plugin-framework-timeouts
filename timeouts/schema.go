@@ -31,6 +31,7 @@ type Opts struct {
 // attribute can be parsed as time.Duration.
 func Block(ctx context.Context, opts Opts) tfsdk.Block {
 	return tfsdk.Block{
+		Typ:         TimeoutsType{},
 		Attributes:  attributesMap(opts),
 		NestingMode: tfsdk.BlockNestingModeSingle,
 	}
