@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
@@ -15,14 +16,16 @@ var (
 )
 
 type TimeoutsType struct {
-	AttrTypes map[string]attr.Type
+	types.ObjectType
 }
 
 // WithAttributeTypes returns a new copy of the type with its attribute types
 // set.
 func (t TimeoutsType) WithAttributeTypes(typs map[string]attr.Type) attr.TypeWithAttributeTypes {
 	return TimeoutsType{
-		AttrTypes: typs,
+		types.ObjectType{
+			AttrTypes: typs,
+		},
 	}
 }
 
@@ -51,7 +54,9 @@ func (t TimeoutsType) TerraformType(ctx context.Context) tftypes.Type {
 // type for the provider to consume the data with.
 func (t TimeoutsType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
 	object := Timeouts{
-		AttrTypes: t.AttrTypes,
+		types.Object{
+			AttrTypes: t.AttrTypes,
+		},
 	}
 	if in.Type() == nil {
 		object.Null = true
@@ -122,7 +127,7 @@ func (t TimeoutsType) ApplyTerraform5AttributePathStep(step tftypes.AttributePat
 // String returns a human-friendly description of the ObjectType.
 func (t TimeoutsType) String() string {
 	var res strings.Builder
-	res.WriteString("types.ObjectType[")
+	res.WriteString("types.TimeoutsType[")
 	keys := make([]string, 0, len(t.AttrTypes))
 	for k := range t.AttrTypes {
 		keys = append(keys, k)
@@ -142,6 +147,8 @@ func (t TimeoutsType) String() string {
 // ValueType returns the Value type.
 func (t TimeoutsType) ValueType(_ context.Context) attr.Value {
 	return Timeouts{
-		AttrTypes: t.AttrTypes,
+		types.Object{
+			AttrTypes: t.AttrTypes,
+		},
 	}
 }

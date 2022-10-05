@@ -15,41 +15,14 @@ import (
 var _ attr.Value = Timeouts{}
 
 type Timeouts struct {
-	// Unknown will be set to true if the entire object is an unknown value.
-	// If only some of the elements in the object are unknown, their known or
-	// unknown status will be represented however that attr.Value
-	// surfaces that information. The Object's Unknown property only tracks
-	// if the number of elements in a Object is known, not whether the
-	// elements that are in the object are known.
-	Unknown bool
-
-	// Null will be set to true if the object is null, either because it was
-	// omitted from the configuration, state, or plan, or because it was
-	// explicitly set to null.
-	Null bool
-
-	Attrs map[string]attr.Value
-
-	AttrTypes map[string]attr.Type
-}
-
-type TimeoutsAsOptions struct {
-	// UnhandledNullAsEmpty controls what happens when As needs to put a
-	// null value in a type that has no way to preserve that distinction.
-	// When set to true, the type's empty value will be used.  When set to
-	// false, an error will be returned.
-	UnhandledNullAsEmpty bool
-
-	// UnhandledUnknownAsEmpty controls what happens when As needs to put
-	// an unknown value in a type that has no way to preserve that
-	// distinction. When set to true, the type's empty value will be used.
-	// When set to false, an error will be returned.
-	UnhandledUnknownAsEmpty bool
+	types.Object
 }
 
 // Type returns an ObjectType with the same attribute types as `o`.
 func (t Timeouts) Type(_ context.Context) attr.Type {
-	return TimeoutsType{AttrTypes: t.AttrTypes}
+	return TimeoutsType{
+		types.ObjectType{AttrTypes: t.AttrTypes},
+	}
 }
 
 // ToTerraformValue returns the data contained in the attr.Value as
