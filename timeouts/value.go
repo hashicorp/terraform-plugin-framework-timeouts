@@ -3,8 +3,6 @@ package timeouts
 import (
 	"context"
 	"fmt"
-	"sort"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -29,7 +27,7 @@ func (t Timeouts) Type(_ context.Context) attr.Type {
 // a tftypes.Value.
 func (t Timeouts) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
 	if t.AttrTypes == nil {
-		return tftypes.Value{}, fmt.Errorf("cannot convert Object to tftypes.Value if AttrTypes field is not set")
+		return tftypes.Value{}, fmt.Errorf("cannot convert Timeouts to tftypes.Value if AttrTypes field is not set")
 	}
 	attrTypes := map[string]tftypes.Type{}
 	for attr, typ := range t.AttrTypes {
@@ -96,49 +94,6 @@ func (t Timeouts) Equal(c attr.Value) bool {
 	}
 
 	return true
-}
-
-// IsNull returns true if the Object represents a null value.
-func (t Timeouts) IsNull() bool {
-	return t.Null
-}
-
-// IsUnknown returns true if the Object represents a currently unknown value.
-func (t Timeouts) IsUnknown() bool {
-	return t.Unknown
-}
-
-// String returns a human-readable representation of the Object value.
-// The string returned here is not protected by any compatibility guarantees,
-// and is intended for logging and error reporting.
-func (t Timeouts) String() string {
-	if t.Unknown {
-		return attr.UnknownValueString
-	}
-
-	if t.Null {
-		return attr.NullValueString
-	}
-
-	// We want the output to be consistent, so we sort the output by key
-	keys := make([]string, 0, len(t.Attrs))
-	for k := range t.Attrs {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-
-	var res strings.Builder
-
-	res.WriteString("{")
-	for i, k := range keys {
-		if i != 0 {
-			res.WriteString(",")
-		}
-		res.WriteString(fmt.Sprintf(`"%s":%s`, k, t.Attrs[k].String()))
-	}
-	res.WriteString("}")
-
-	return res.String()
 }
 
 func (t Timeouts) Create(ctx context.Context, def time.Duration) time.Duration {
