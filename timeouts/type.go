@@ -29,26 +29,6 @@ func (t TimeoutsType) WithAttributeTypes(typs map[string]attr.Type) attr.TypeWit
 	}
 }
 
-// AttributeTypes returns the type's attribute types.
-func (t TimeoutsType) AttributeTypes() map[string]attr.Type {
-	return t.AttrTypes
-}
-
-// TerraformType returns the tftypes.Type that should be used to
-// represent this type. This constrains what user input will be
-// accepted and what kind of data can be set in state. The framework
-// will use this to translate the AttributeType to something Terraform
-// can understand.
-func (t TimeoutsType) TerraformType(ctx context.Context) tftypes.Type {
-	attributeTypes := map[string]tftypes.Type{}
-	for k, v := range t.AttrTypes {
-		attributeTypes[k] = v.TerraformType(ctx)
-	}
-	return tftypes.Object{
-		AttributeTypes: attributeTypes,
-	}
-}
-
 // ValueFromTerraform returns an attr.Value given a tftypes.Value.
 // This is meant to convert the tftypes.Value into a more convenient Go
 // type for the provider to consume the data with.
@@ -112,16 +92,6 @@ func (t TimeoutsType) Equal(candidate attr.Type) bool {
 		}
 	}
 	return true
-}
-
-// ApplyTerraform5AttributePathStep applies the given AttributePathStep to the
-// object.
-func (t TimeoutsType) ApplyTerraform5AttributePathStep(step tftypes.AttributePathStep) (interface{}, error) {
-	if _, ok := step.(tftypes.AttributeName); !ok {
-		return nil, fmt.Errorf("cannot apply step %T to ObjectType", step)
-	}
-
-	return t.AttrTypes[string(step.(tftypes.AttributeName))], nil
 }
 
 // String returns a human-friendly description of the ObjectType.
