@@ -2,8 +2,6 @@ package timeouts
 
 import (
 	"context"
-	"fmt"
-	"sort"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -33,85 +31,30 @@ func (t TimeoutsType) WithAttributeTypes(typs map[string]attr.Type) attr.TypeWit
 // This is meant to convert the tftypes.Value into a more convenient Go
 // type for the provider to consume the data with.
 func (t TimeoutsType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
-	object := Timeouts{
-		types.Object{
-			AttrTypes: t.AttrTypes,
-		},
-	}
-	if in.Type() == nil {
-		object.Null = true
-		return object, nil
-	}
-	if !in.Type().Equal(t.TerraformType(ctx)) {
-		return nil, fmt.Errorf("expected %s, got %s", t.TerraformType(ctx), in.Type())
-	}
-	if !in.IsKnown() {
-		object.Unknown = true
-		return object, nil
-	}
-	if in.IsNull() {
-		object.Null = true
-		return object, nil
-	}
-	attributes := map[string]attr.Value{}
-
-	val := map[string]tftypes.Value{}
-	err := in.As(&val)
+	obj, err := t.ObjectType.ValueFromTerraform(ctx, in)
 	if err != nil {
 		return nil, err
 	}
 
-	for k, v := range val {
-		a, err := object.AttrTypes[k].ValueFromTerraform(ctx, v)
-		if err != nil {
-			return nil, err
-		}
-		attributes[k] = a
-	}
-	object.Attrs = attributes
-	return object, nil
+	return Timeouts{
+		obj.(types.Object),
+	}, nil
 }
 
 // Equal returns true if `candidate` is also an ObjectType and has the same
 // AttributeTypes.
 func (t TimeoutsType) Equal(candidate attr.Type) bool {
-	other, ok := candidate.(TimeoutsType)
+	_, ok := candidate.(TimeoutsType)
 	if !ok {
 		return false
 	}
-	if len(other.AttrTypes) != len(t.AttrTypes) {
-		return false
-	}
-	for k, v := range t.AttrTypes {
-		attr, ok := other.AttrTypes[k]
-		if !ok {
-			return false
-		}
-		if !v.Equal(attr) {
-			return false
-		}
-	}
-	return true
+
+	return t.ObjectType.Equal(candidate.(TimeoutsType).ObjectType)
 }
 
 // String returns a human-friendly description of the ObjectType.
 func (t TimeoutsType) String() string {
-	var res strings.Builder
-	res.WriteString("types.TimeoutsType[")
-	keys := make([]string, 0, len(t.AttrTypes))
-	for k := range t.AttrTypes {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-	for pos, key := range keys {
-		if pos != 0 {
-			res.WriteString(", ")
-		}
-		res.WriteString(`"` + key + `":`)
-		res.WriteString(t.AttrTypes[key].String())
-	}
-	res.WriteString("]")
-	return res.String()
+	return strings.Replace(t.ObjectType.String(), "types.ObjectType[", "timeouts.TimeoutsType[", 1)
 }
 
 // ValueType returns the Value type.

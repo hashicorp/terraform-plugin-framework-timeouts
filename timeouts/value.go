@@ -2,7 +2,6 @@ package timeouts
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -26,74 +25,18 @@ func (t Timeouts) Type(_ context.Context) attr.Type {
 // ToTerraformValue returns the data contained in the attr.Value as
 // a tftypes.Value.
 func (t Timeouts) ToTerraformValue(ctx context.Context) (tftypes.Value, error) {
-	if t.AttrTypes == nil {
-		return tftypes.Value{}, fmt.Errorf("cannot convert Timeouts to tftypes.Value if AttrTypes field is not set")
-	}
-	attrTypes := map[string]tftypes.Type{}
-	for attr, typ := range t.AttrTypes {
-		attrTypes[attr] = typ.TerraformType(ctx)
-	}
-	objectType := tftypes.Object{AttributeTypes: attrTypes}
-	if t.Unknown {
-		return tftypes.NewValue(objectType, tftypes.UnknownValue), nil
-	}
-	if t.Null {
-		return tftypes.NewValue(objectType, nil), nil
-	}
-	vals := map[string]tftypes.Value{}
-
-	for k, v := range t.Attrs {
-		val, err := v.ToTerraformValue(ctx)
-		if err != nil {
-			return tftypes.NewValue(objectType, tftypes.UnknownValue), err
-		}
-		vals[k] = val
-	}
-	if err := tftypes.ValidateValue(objectType, vals); err != nil {
-		return tftypes.NewValue(objectType, tftypes.UnknownValue), err
-	}
-	return tftypes.NewValue(objectType, vals), nil
+	return t.Object.ToTerraformValue(ctx)
 }
 
 // Equal returns true if the Object is considered semantically equal
 // (same type and same value) to the attr.Value passed as an argument.
 func (t Timeouts) Equal(c attr.Value) bool {
-	other, ok := c.(Timeouts)
+	_, ok := c.(Timeouts)
 	if !ok {
 		return false
 	}
-	if t.Unknown != other.Unknown {
-		return false
-	}
-	if t.Null != other.Null {
-		return false
-	}
-	if len(t.AttrTypes) != len(other.AttrTypes) {
-		return false
-	}
-	for k, v := range t.AttrTypes {
-		attr, ok := other.AttrTypes[k]
-		if !ok {
-			return false
-		}
-		if !v.Equal(attr) {
-			return false
-		}
-	}
-	if len(t.Attrs) != len(other.Attrs) {
-		return false
-	}
-	for k, v := range t.Attrs {
-		attr, ok := other.Attrs[k]
-		if !ok {
-			return false
-		}
-		if !v.Equal(attr) {
-			return false
-		}
-	}
 
-	return true
+	return t.Object.Equal(c)
 }
 
 func (t Timeouts) Create(ctx context.Context, def time.Duration) time.Duration {
