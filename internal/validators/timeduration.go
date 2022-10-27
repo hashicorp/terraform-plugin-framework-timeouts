@@ -30,15 +30,15 @@ func (validator timeDurationValidator) MarkdownDescription(ctx context.Context) 
 func (validator timeDurationValidator) Validate(ctx context.Context, request tfsdk.ValidateAttributeRequest, response *tfsdk.ValidateAttributeResponse) {
 	s := request.AttributeConfig.(types.String)
 
-	if s.Unknown || s.Null {
+	if s.IsUnknown() || s.IsNull() {
 		return
 	}
 
-	if _, err := time.ParseDuration(s.Value); err != nil {
+	if _, err := time.ParseDuration(s.ValueString()); err != nil {
 		response.Diagnostics.Append(diag.NewAttributeErrorDiagnostic(
 			request.AttributePath,
 			"Invalid Attribute Value Time Duration",
-			fmt.Sprintf("%q %s", s.Value, validator.Description(ctx))),
+			fmt.Sprintf("%q %s", s.ValueString(), validator.Description(ctx))),
 		)
 		return
 	}

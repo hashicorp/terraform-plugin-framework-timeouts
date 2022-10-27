@@ -11,25 +11,27 @@ import (
 // entry for "create" that can be parsed then time.Duration is returned. If object.Attrs
 // does not contain "create" the supplied default will be returned.
 func Create(ctx context.Context, obj types.Object, def time.Duration) time.Duration {
-	if _, ok := obj.Attrs[attributeNameCreate]; !ok {
+	createTimeoutValue, ok := obj.Attributes()[attributeNameCreate]
+
+	if !ok {
 		return def
 	}
 
-	createTimeout := obj.Attrs[attributeNameCreate]
-
-	if createTimeout.IsNull() {
+	if createTimeoutValue.IsNull() {
 		return def
 	}
 
 	// Although the schema mutation functions guarantee that the type for create timeout
 	// is a string, this function accepts any types.Object.
-	if _, ok := createTimeout.(types.String); !ok {
+	createTimeoutString, ok := createTimeoutValue.(types.String)
+
+	if !ok {
 		return def
 	}
 
 	// Although the schema validation guarantees that the type for create timeout
 	// is parseable as a time.Duration, this function accepts any types.Object.
-	duration, err := time.ParseDuration(createTimeout.(types.String).Value)
+	duration, err := time.ParseDuration(createTimeoutString.ValueString())
 	if err != nil {
 		return def
 	}
@@ -41,25 +43,27 @@ func Create(ctx context.Context, obj types.Object, def time.Duration) time.Durat
 // entry for "read" that can be parsed then time.Duration is returned. If object.Attrs
 // does not contain "read" the supplied default will be returned.
 func Read(ctx context.Context, obj types.Object, def time.Duration) time.Duration {
-	if _, ok := obj.Attrs[attributeNameRead]; !ok {
+	readTimeoutValue, ok := obj.Attributes()[attributeNameRead]
+
+	if !ok {
 		return def
 	}
 
-	readTimeout := obj.Attrs[attributeNameRead]
-
-	if readTimeout.IsNull() {
+	if readTimeoutValue.IsNull() {
 		return def
 	}
 
 	// Although the schema mutation functions guarantee that the type for read timeout
 	// is a string, this function accepts any types.Object.
-	if _, ok := readTimeout.(types.String); !ok {
+	readTimeoutString, ok := readTimeoutValue.(types.String)
+
+	if !ok {
 		return def
 	}
 
 	// Although the schema validation guarantees that the type for read timeout
 	// is parseable as a time.Duration, this function accepts any types.Object.
-	duration, err := time.ParseDuration(readTimeout.(types.String).Value)
+	duration, err := time.ParseDuration(readTimeoutString.ValueString())
 	if err != nil {
 		return def
 	}
@@ -71,25 +75,27 @@ func Read(ctx context.Context, obj types.Object, def time.Duration) time.Duratio
 // entry for "update" that can be parsed then time.Duration is returned. If object.Attrs
 // does not contain "update" the supplied default will be returned.
 func Update(ctx context.Context, obj types.Object, def time.Duration) time.Duration {
-	if _, ok := obj.Attrs[attributeNameUpdate]; !ok {
+	updateTimeoutValue, ok := obj.Attributes()[attributeNameUpdate]
+
+	if !ok {
 		return def
 	}
 
-	updateTimeout := obj.Attrs[attributeNameUpdate]
-
-	if updateTimeout.IsNull() {
+	if updateTimeoutValue.IsNull() {
 		return def
 	}
 
 	// Although the schema mutation functions guarantee that the type for update timeout
 	// is a string, this function accepts any types.Object.
-	if _, ok := updateTimeout.(types.String); !ok {
+	updateTimeoutString, ok := updateTimeoutValue.(types.String)
+
+	if !ok {
 		return def
 	}
 
 	// Although the schema validation guarantees that the type for update timeout
 	// is parseable as a time.Duration, this function accepts any types.Object.
-	duration, err := time.ParseDuration(updateTimeout.(types.String).Value)
+	duration, err := time.ParseDuration(updateTimeoutString.ValueString())
 	if err != nil {
 		return def
 	}
@@ -101,25 +107,27 @@ func Update(ctx context.Context, obj types.Object, def time.Duration) time.Durat
 // entry for "delete" that can be parsed then time.Duration is returned. If object.Attrs
 // does not contain "delete" the supplied default will be returned.
 func Delete(ctx context.Context, obj types.Object, def time.Duration) time.Duration {
-	if _, ok := obj.Attrs[attributeNameDelete]; !ok {
+	deleteTimeoutValue, ok := obj.Attributes()[attributeNameDelete]
+
+	if !ok {
 		return def
 	}
 
-	deleteTimeout := obj.Attrs[attributeNameDelete]
-
-	if deleteTimeout.IsNull() {
+	if deleteTimeoutValue.IsNull() {
 		return def
 	}
 
 	// Although the schema mutation functions guarantee that the type for delete timeout
 	// is a string, this function accepts any types.Object.
-	if _, ok := deleteTimeout.(types.String); !ok {
+	deleteTimeoutString, ok := deleteTimeoutValue.(types.String)
+
+	if !ok {
 		return def
 	}
 
 	// Although the schema validation guarantees that the type for delete timeout
 	// is parseable as a time.Duration, this function accepts any types.Object.
-	duration, err := time.ParseDuration(deleteTimeout.(types.String).Value)
+	duration, err := time.ParseDuration(deleteTimeoutString.ValueString())
 	if err != nil {
 		return def
 	}
