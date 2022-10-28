@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/google/go-cmp v0.5.9
-	github.com/hashicorp/terraform-plugin-framework v0.14.1-0.20221005122614-25ef9db48fcf
+	github.com/hashicorp/terraform-plugin-framework v0.15.1-0.20221028130334-c77bb9e4f274
 	github.com/hashicorp/terraform-plugin-go v0.14.0
 )
 
