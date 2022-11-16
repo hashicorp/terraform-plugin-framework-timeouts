@@ -23,16 +23,16 @@ func TestTimeDuration(t *testing.T) {
 
 	tests := map[string]testCase{
 		"unknown": {
-			val: types.String{Unknown: true},
+			val: types.StringUnknown(),
 		},
 		"null": {
-			val: types.String{Null: true},
+			val: types.StringNull(),
 		},
 		"valid": {
-			val: types.String{Value: "20m"},
+			val: types.StringValue("20m"),
 		},
 		"invalid": {
-			val: types.String{Value: "20x"},
+			val: types.StringValue("20x"),
 			expectedDiagnostics: diag.Diagnostics{
 				diag.NewAttributeErrorDiagnostic(
 					path.Root("test"),

@@ -28,64 +28,58 @@ func TestCreate(t *testing.T) {
 			expected: def,
 		},
 		"create-is-null": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"create": types.String{Null: true},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"create": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"create": types.StringNull(),
+				},
+			),
 			expected: def,
 		},
 		"create-not-string": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"create": types.Bool{},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"create": types.BoolType,
 				},
-			},
+				map[string]attr.Value{
+					"create": types.Bool{},
+				},
+			),
 			expected: def,
 		},
 		"create-not-parseable-empty": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"create": types.String{
-						Value: "",
-					},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"create": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"create": types.StringValue(""),
+				},
+			),
 			expected: def,
 		},
 		"create-not-parseable": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"create": types.String{
-						Value: "60x",
-					},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"create": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"create": types.StringValue("60x"),
+				},
+			),
 			expected: def,
 		},
 		"create-valid": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"create": types.String{
-						Value: "60m",
-					},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"create": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"create": types.StringValue("60m"),
+				},
+			),
 			expected: 60 * time.Minute,
 		},
 	}
@@ -118,64 +112,58 @@ func TestRead(t *testing.T) {
 			expected: def,
 		},
 		"read-is-null": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"read": types.String{Null: true},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"read": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"read": types.StringNull(),
+				},
+			),
 			expected: def,
 		},
 		"read-not-string": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"read": types.Bool{},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"read": types.BoolType,
 				},
-			},
+				map[string]attr.Value{
+					"read": types.BoolValue(true),
+				},
+			),
 			expected: def,
 		},
 		"read-not-parseable-empty": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"read": types.String{
-						Value: "",
-					},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"read": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"read": types.StringValue(""),
+				},
+			),
 			expected: def,
 		},
 		"read-not-parseable": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"read": types.String{
-						Value: "60x",
-					},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"read": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"read": types.StringValue("60x"),
+				},
+			),
 			expected: def,
 		},
 		"read-valid": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"read": types.String{
-						Value: "60m",
-					},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"read": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"read": types.StringValue("60m"),
+				},
+			),
 			expected: 60 * time.Minute,
 		},
 	}
@@ -208,64 +196,58 @@ func TestUpdate(t *testing.T) {
 			expected: def,
 		},
 		"update-is-null": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"update": types.String{Null: true},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"update": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"update": types.StringNull(),
+				},
+			),
 			expected: def,
 		},
 		"update-not-string": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"update": types.Bool{},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"update": types.BoolType,
 				},
-			},
+				map[string]attr.Value{
+					"update": types.BoolValue(true),
+				},
+			),
 			expected: def,
 		},
 		"update-not-parseable-empty": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"update": types.String{
-						Value: "",
-					},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"update": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"update": types.StringValue(""),
+				},
+			),
 			expected: def,
 		},
 		"update-not-parseable": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"update": types.String{
-						Value: "60x",
-					},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"update": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"update": types.StringValue("60x"),
+				},
+			),
 			expected: def,
 		},
 		"update-valid": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"update": types.String{
-						Value: "60m",
-					},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"update": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"update": types.StringValue("60m"),
+				},
+			),
 			expected: 60 * time.Minute,
 		},
 	}
@@ -298,64 +280,58 @@ func TestDelete(t *testing.T) {
 			expected: def,
 		},
 		"delete-is-null": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"delete": types.String{Null: true},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"delete": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"delete": types.StringNull(),
+				},
+			),
 			expected: def,
 		},
 		"delete-not-string": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"delete": types.Bool{},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"delete": types.BoolType,
 				},
-			},
+				map[string]attr.Value{
+					"delete": types.BoolValue(true),
+				},
+			),
 			expected: def,
 		},
 		"delete-not-parseable-empty": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"delete": types.String{
-						Value: "",
-					},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"delete": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"delete": types.StringValue(""),
+				},
+			),
 			expected: def,
 		},
 		"delete-not-parseable": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"delete": types.String{
-						Value: "60x",
-					},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"delete": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"delete": types.StringValue("60x"),
+				},
+			),
 			expected: def,
 		},
 		"delete-valid": {
-			obj: types.Object{
-				Attrs: map[string]attr.Value{
-					"delete": types.String{
-						Value: "60m",
-					},
-				},
-				AttrTypes: map[string]attr.Type{
+			obj: types.ObjectValueMust(
+				map[string]attr.Type{
 					"delete": types.StringType,
 				},
-			},
+				map[string]attr.Value{
+					"delete": types.StringValue("60m"),
+				},
+			),
 			expected: 60 * time.Minute,
 		},
 	}
