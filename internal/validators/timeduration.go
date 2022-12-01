@@ -6,11 +6,13 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 var _ tfsdk.AttributeValidator = timeDurationValidator{}
+var _ validator.String = timeDurationValidator{}
 
 // timeDurationValidator validates that a string Attribute's value is parseable as time.Duration.
 type timeDurationValidator struct {
@@ -27,6 +29,8 @@ func (validator timeDurationValidator) MarkdownDescription(ctx context.Context) 
 }
 
 // Validate performs the validation.
+//
+// Deprecated: Use ValidateString instead.
 func (validator timeDurationValidator) Validate(ctx context.Context, request tfsdk.ValidateAttributeRequest, response *tfsdk.ValidateAttributeResponse) {
 	s := request.AttributeConfig.(types.String)
 
@@ -44,6 +48,24 @@ func (validator timeDurationValidator) Validate(ctx context.Context, request tfs
 	}
 }
 
+// ValidateString performs the validation.
+func (validator timeDurationValidator) ValidateString(ctx context.Context, req validator.StringRequest, resp *validator.StringResponse) {
+	s := req.ConfigValue
+
+	if s.IsUnknown() || s.IsNull() {
+		return
+	}
+
+	if _, err := time.ParseDuration(s.ValueString()); err != nil {
+		resp.Diagnostics.Append(diag.NewAttributeErrorDiagnostic(
+			req.Path,
+			"Invalid Attribute Value Time Duration",
+			fmt.Sprintf("%q %s", s.ValueString(), validator.Description(ctx))),
+		)
+		return
+	}
+}
+
 // TimeDuration returns an AttributeValidator which ensures that any configured
 // attribute value:
 //
@@ -51,5 +73,15 @@ func (validator timeDurationValidator) Validate(ctx context.Context, request tfs
 //
 // Null (unconfigured) and unknown (known after apply) values are skipped.
 func TimeDuration() tfsdk.AttributeValidator {
+	return timeDurationValidator{}
+}
+
+// TimeDurationString returns an AttributeValidator which ensures that any configured
+// attribute value:
+//
+//   - Is parseable as time duration.
+//
+// Null (unconfigured) and unknown (known after apply) values are skipped.
+func TimeDurationString() validator.String {
 	return timeDurationValidator{}
 }

@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts"
 )
 
+//nolint:staticcheck
 func TestBlock(t *testing.T) {
 	t.Parallel()
 
@@ -83,6 +84,7 @@ func TestBlock(t *testing.T) {
 	}
 }
 
+//nolint:staticcheck
 func TestBlockAll(t *testing.T) {
 	t.Parallel()
 
@@ -127,6 +129,7 @@ func TestBlockAll(t *testing.T) {
 	}
 }
 
+//nolint:staticcheck
 func TestAttributes(t *testing.T) {
 	t.Parallel()
 
@@ -198,6 +201,7 @@ func TestAttributes(t *testing.T) {
 	}
 }
 
+//nolint:staticcheck
 func TestAttributesAll(t *testing.T) {
 	t.Parallel()
 

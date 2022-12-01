@@ -1,10 +1,10 @@
-package timeouts
+package datasourcetimeouts
 
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
-	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
 )
@@ -25,30 +25,21 @@ type Opts struct {
 	Delete bool
 }
 
-// Block returns a tfsdk.Block containing attributes for each of the fields
+// Block returns a schema.Block containing attributes for each of the fields
 // in Opts which are set to true. Each attribute is defined as types.StringType
 // and optional. A validator is used to verify that the value assigned to an
 // attribute can be parsed as time.Duration.
-//
-// Deprecated: Use resourcetimeouts.Block or datasourcetimeouts.Block instead.
-//
-//nolint:staticcheck
-func Block(ctx context.Context, opts Opts) tfsdk.Block {
-	return tfsdk.Block{
-		Attributes:  attributesMap(opts),
-		NestingMode: tfsdk.BlockNestingModeSingle,
+func Block(ctx context.Context, opts Opts) schema.Block {
+	return schema.SingleNestedBlock{
+		Attributes: attributesMap(opts),
 	}
 }
 
-// BlockAll returns a tfsdk.Block containing attributes for each of create, read,
+// BlockAll returns a schema.Block containing attributes for each of create, read,
 // update and delete. Each attribute is defined as types.StringType and optional.
 // A validator is used to verify that the value assigned to an attribute can be
 // parsed as time.Duration.
-//
-// Deprecated: Use resourcetimeouts.BlockAll or datasourcetimeouts.BlockAll instead.
-//
-//nolint:staticcheck
-func BlockAll(ctx context.Context) tfsdk.Block {
+func BlockAll(ctx context.Context) schema.Block {
 	return Block(ctx, Opts{
 		Create: true,
 		Read:   true,
@@ -57,30 +48,22 @@ func BlockAll(ctx context.Context) tfsdk.Block {
 	})
 }
 
-// Attributes returns a tfsdk.Attribute containing a tfsdk.SingleNestedAttributes
+// Attributes returns a schema.SingleNestedAttribute
 // which contains attributes for each of the fields in Opts which are set to true.
 // Each attribute is defined as types.StringType and optional. A validator is used
 // to verify that the value assigned to an attribute can be parsed as time.Duration.
-//
-// Deprecated: Use resourcetimeouts.Attributes or datasourcetimeouts.Attributes instead.
-//
-//nolint:staticcheck
-func Attributes(ctx context.Context, opts Opts) tfsdk.Attribute {
-	return tfsdk.Attribute{
+func Attributes(ctx context.Context, opts Opts) schema.Attribute {
+	return schema.SingleNestedAttribute{
 		Optional:   true,
-		Attributes: tfsdk.SingleNestedAttributes(attributesMap(opts)),
+		Attributes: attributesMap(opts),
 	}
 }
 
-// AttributesAll returns a tfsdk.Attribute containing a tfsdk.SingleNestedAttributes
+// AttributesAll returns a schema.SingleNestedAttribute
 // which contains attributes for each of create, read, update and delete. Each
 // attribute is defined as types.StringType and optional. A validator is used to
 // verify that the value assigned to an attribute can be parsed as time.Duration.
-//
-// Deprecated: Use resourcetimeouts.AttributesAll or datasourcetimeouts.AttributesAll instead.
-//
-//nolint:staticcheck
-func AttributesAll(ctx context.Context) tfsdk.Attribute {
+func AttributesAll(ctx context.Context) schema.Attribute {
 	return Attributes(ctx, Opts{
 		Create: true,
 		Read:   true,
@@ -89,14 +72,12 @@ func AttributesAll(ctx context.Context) tfsdk.Attribute {
 	})
 }
 
-//nolint:staticcheck
-func attributesMap(opts Opts) map[string]tfsdk.Attribute {
-	attributes := map[string]tfsdk.Attribute{}
-	attribute := tfsdk.Attribute{
-		Type:     types.StringType,
+func attributesMap(opts Opts) map[string]schema.Attribute {
+	attributes := map[string]schema.Attribute{}
+	attribute := schema.StringAttribute{
 		Optional: true,
-		Validators: []tfsdk.AttributeValidator{
-			validators.TimeDuration(),
+		Validators: []validator.String{
+			validators.TimeDurationString(),
 		},
 	}
 
