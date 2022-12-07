@@ -1,12 +1,15 @@
-package resourcetimeouts
+package timeouts
 
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/type"
 )
 
 const (
@@ -32,6 +35,11 @@ type Opts struct {
 func Block(ctx context.Context, opts Opts) schema.Block {
 	return schema.SingleNestedBlock{
 		Attributes: attributesMap(opts),
+		CustomType: timeouts.TimeoutsType{
+			ObjectType: types.ObjectType{
+				AttrTypes: attrTypesMap(opts),
+			},
+		},
 	}
 }
 
@@ -54,8 +62,13 @@ func BlockAll(ctx context.Context) schema.Block {
 // assigned to an attribute can be parsed as time.Duration.
 func Attributes(ctx context.Context, opts Opts) schema.Attribute {
 	return schema.SingleNestedAttribute{
-		Optional:   true,
 		Attributes: attributesMap(opts),
+		CustomType: timeouts.TimeoutsType{
+			ObjectType: types.ObjectType{
+				AttrTypes: attrTypesMap(opts),
+			},
+		},
+		Optional: true,
 	}
 }
 
@@ -98,4 +111,26 @@ func attributesMap(opts Opts) map[string]schema.Attribute {
 	}
 
 	return attributes
+}
+
+func attrTypesMap(opts Opts) map[string]attr.Type {
+	attrTypes := map[string]attr.Type{}
+
+	if opts.Create {
+		attrTypes[attributeNameCreate] = types.StringType
+	}
+
+	if opts.Read {
+		attrTypes[attributeNameRead] = types.StringType
+	}
+
+	if opts.Update {
+		attrTypes[attributeNameUpdate] = types.StringType
+	}
+
+	if opts.Delete {
+		attrTypes[attributeNameDelete] = types.StringType
+	}
+
+	return attrTypes
 }

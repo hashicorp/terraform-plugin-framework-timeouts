@@ -1,15 +1,18 @@
-package datasourcetimeouts_test
+package timeouts_test
 
 import (
 	"context"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
-	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/datasource"
+	datasourcetimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/datasource"
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/type"
 )
 
 func TestBlock(t *testing.T) {
@@ -23,6 +26,11 @@ func TestBlock(t *testing.T) {
 		"empty-opts": {
 			opts: datasourcetimeouts.Opts{},
 			expected: schema.SingleNestedBlock{
+				CustomType: timeouts.TimeoutsType{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{},
+					},
+				},
 				Attributes: map[string]schema.Attribute{},
 			},
 		},
@@ -31,6 +39,13 @@ func TestBlock(t *testing.T) {
 				Create: true,
 			},
 			expected: schema.SingleNestedBlock{
+				CustomType: timeouts.TimeoutsType{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"create": types.StringType,
+						},
+					},
+				},
 				Attributes: map[string]schema.Attribute{
 					"create": schema.StringAttribute{
 						Optional: true,
@@ -47,6 +62,14 @@ func TestBlock(t *testing.T) {
 				Update: true,
 			},
 			expected: schema.SingleNestedBlock{
+				CustomType: timeouts.TimeoutsType{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"create": types.StringType,
+							"update": types.StringType,
+						},
+					},
+				},
 				Attributes: map[string]schema.Attribute{
 					"create": schema.StringAttribute{
 						Optional: true,
@@ -83,6 +106,16 @@ func TestBlockAll(t *testing.T) {
 	actual := datasourcetimeouts.BlockAll(context.Background())
 
 	expected := schema.SingleNestedBlock{
+		CustomType: timeouts.TimeoutsType{
+			ObjectType: types.ObjectType{
+				AttrTypes: map[string]attr.Type{
+					"create": types.StringType,
+					"read":   types.StringType,
+					"update": types.StringType,
+					"delete": types.StringType,
+				},
+			},
+		},
 		Attributes: map[string]schema.Attribute{
 			"create": schema.StringAttribute{
 				Optional: true,
@@ -127,8 +160,13 @@ func TestAttributes(t *testing.T) {
 		"empty-opts": {
 			opts: datasourcetimeouts.Opts{},
 			expected: schema.SingleNestedAttribute{
-				Optional:   true,
 				Attributes: map[string]schema.Attribute{},
+				CustomType: timeouts.TimeoutsType{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{},
+					},
+				},
+				Optional: true,
 			},
 		},
 		"create-opts": {
@@ -136,7 +174,6 @@ func TestAttributes(t *testing.T) {
 				Create: true,
 			},
 			expected: schema.SingleNestedAttribute{
-				Optional: true,
 				Attributes: map[string]schema.Attribute{
 					"create": schema.StringAttribute{
 						Optional: true,
@@ -145,6 +182,14 @@ func TestAttributes(t *testing.T) {
 						},
 					},
 				},
+				CustomType: timeouts.TimeoutsType{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"create": types.StringType,
+						},
+					},
+				},
+				Optional: true,
 			},
 		},
 		"create-update-opts": {
@@ -153,7 +198,6 @@ func TestAttributes(t *testing.T) {
 				Update: true,
 			},
 			expected: schema.SingleNestedAttribute{
-				Optional: true,
 				Attributes: map[string]schema.Attribute{
 					"create": schema.StringAttribute{
 						Optional: true,
@@ -168,6 +212,15 @@ func TestAttributes(t *testing.T) {
 						},
 					},
 				},
+				CustomType: timeouts.TimeoutsType{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"create": types.StringType,
+							"update": types.StringType,
+						},
+					},
+				},
+				Optional: true,
 			},
 		},
 	}
@@ -190,7 +243,6 @@ func TestAttributesAll(t *testing.T) {
 	actual := datasourcetimeouts.AttributesAll(context.Background())
 
 	expected := schema.SingleNestedAttribute{
-		Optional: true,
 		Attributes: map[string]schema.Attribute{
 			"create": schema.StringAttribute{
 				Optional: true,
@@ -217,6 +269,17 @@ func TestAttributesAll(t *testing.T) {
 				},
 			},
 		},
+		CustomType: timeouts.TimeoutsType{
+			ObjectType: types.ObjectType{
+				AttrTypes: map[string]attr.Type{
+					"create": types.StringType,
+					"read":   types.StringType,
+					"update": types.StringType,
+					"delete": types.StringType,
+				},
+			},
+		},
+		Optional: true,
 	}
 
 	if diff := cmp.Diff(actual, expected); diff != "" {
