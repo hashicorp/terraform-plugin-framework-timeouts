@@ -70,6 +70,15 @@ func (t TimeoutsValue) Equal(c attr.Value) bool {
 	return t.Object.Equal(other.Object)
 }
 
+// Type returns an TimeoutsType with the same attribute types as `t`.
+func (t TimeoutsValue) Type(ctx context.Context) attr.Type {
+	return TimeoutsType{
+		types.ObjectType{
+			AttrTypes: t.AttributeTypes(ctx),
+		},
+	}
+}
+
 // Create attempts to retrieve the "create" attribute and parse it as time.Duration.
 // If any errors are generated they are returned along with the default timeout of 20 minutes.
 func (t TimeoutsValue) Create(ctx context.Context) (time.Duration, error) {
