@@ -103,7 +103,7 @@ func (t TimeoutsValue) Delete(ctx context.Context) (time.Duration, error) {
 	return t.getTimeout(ctx, attributeNameDelete)
 }
 
-func (t TimeoutsValue) getTimeout(ctx context.Context, timeoutName string) (time.Duration, error) {
+func (t TimeoutsValue) getTimeout(_ context.Context, timeoutName string) (time.Duration, error) {
 	value, ok := t.Object.Attributes()[timeoutName]
 	if !ok {
 		return defaultTimeout, fmt.Errorf("timeout for %q does not exist", timeoutName)
