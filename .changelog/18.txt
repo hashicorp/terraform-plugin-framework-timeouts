@@ -1,0 +1,11 @@
+```release-note:feature
+Introduced datasource `timeouts` package for use with datasource schema
+```
+
+```release-note:feature
+Introduced resource `timeouts` package for use with resource schema
+```
+
+```release-note:feature
+Introduced type `timeouts` package to provider `TimeoutsType` and `TimeoutsValue` for use with schema and data models, respectively
+```
