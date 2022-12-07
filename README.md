@@ -48,10 +48,10 @@ resource "timeouts_example" "example" {
 }
 ```
 
-You can use this module to mutate the `tfsdk.Schema` as follows:
+You can use this module to mutate the `schema.Schema` as follows:
 
 ```go
-func (t *exampleResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
+func (t *exampleResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
     return tfsdk.Schema{
         /* ... */
 
@@ -76,10 +76,10 @@ resource "timeouts_example" "example" {
 }
 ```
 
-You can use this module to mutate the `tfsdk.Schema` as follows:
+You can use this module to mutate the `schema.Schema` as follows:
 
 ```go
-func (t *exampleResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
+func (t *exampleResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
     return tfsdk.Schema{
         Attributes: map[string]tfsdk.Attribute{
             /* ... */
@@ -102,12 +102,12 @@ func (r exampleResource) Create(ctx context.Context, req resource.CreateRequest,
 ```
 
 The model that is being used, `exampleResourceData` in this example, will need to be modified to include a field for
-timeouts which is of `types.Object`. For example:
+timeouts which is of type `timeouts.TimeoutsValue`. For example:
 
 ```go
 type exampleResourceData struct {
     /* ... */
-    Timeouts    types.Object `tfsdk:"timeouts"`
+    Timeouts    timeouts.TimeoutsValue `tfsdk:"timeouts"`
 ```
 
 ### Accessing Timeouts in CRUD Functions
@@ -125,13 +125,14 @@ func (r exampleResource) Create(ctx context.Context, req resource.CreateRequest,
         return
     }
 
-	defaultCreateTimeout := 20 * time.Minutes
+    createTimeout, err := data.Timeouts.Create(ctx)
+    if err != nil {
+        // handle error
+    }
 	
-    createTimeout := timeouts.Create(ctx, data.Timeouts, defaultCreateTimeout)
-
     ctx, cancel := context.WithTimeout(ctx, createTimeout)
     defer cancel()
-
+	
     /* ... */
 }
 ```
