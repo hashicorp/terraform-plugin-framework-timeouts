@@ -9,13 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
 )
 
-const (
-	attributeNameCreate = "create"
-	attributeNameRead   = "read"
-	attributeNameUpdate = "update"
-	attributeNameDelete = "delete"
-)
-
 // Opts is used as an argument to Block and Attributes to indicate which attributes
 // should be created.
 type Opts struct {

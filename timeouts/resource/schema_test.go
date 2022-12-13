@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts"
 	resourcetimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/resource"
-	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/type"
 )
 
 func TestBlock(t *testing.T) {

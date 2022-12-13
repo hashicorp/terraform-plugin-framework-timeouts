@@ -8,10 +8,11 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 
-	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/type"
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts"
 )
 
 func TestTimeoutsTypeValueFromTerraform(t *testing.T) {
@@ -157,7 +158,7 @@ func TestTimeoutsValueCreate(t *testing.T) {
 	type testCase struct {
 		timeoutsValue   timeouts.TimeoutsValue
 		expectedTimeout time.Duration
-		expectedErr     error
+		expectedDiags   diag.Diagnostics
 	}
 	tests := map[string]testCase{
 		"create": {
@@ -172,14 +173,19 @@ func TestTimeoutsValueCreate(t *testing.T) {
 				),
 			},
 			expectedTimeout: 10 * time.Minute,
-			expectedErr:     nil,
+			expectedDiags:   nil,
 		},
 		"create-not-set": {
 			timeoutsValue: timeouts.TimeoutsValue{
 				Object: types.Object{},
 			},
 			expectedTimeout: 20 * time.Minute,
-			expectedErr:     fmt.Errorf(`timeout for "create" does not exist`),
+			expectedDiags: diag.Diagnostics{
+				diag.NewErrorDiagnostic(
+					"Timeout Does Not Exist",
+					fmt.Sprintf(`timeout for "create" does not exist`),
+				),
+			},
 		},
 		"create-not-parseable-as-time-duration": {
 			timeoutsValue: timeouts.TimeoutsValue{
@@ -193,7 +199,12 @@ func TestTimeoutsValueCreate(t *testing.T) {
 				),
 			},
 			expectedTimeout: 20 * time.Minute,
-			expectedErr:     fmt.Errorf(`time: unknown unit "x" in duration "10x"`),
+			expectedDiags: diag.Diagnostics{
+				diag.NewErrorDiagnostic(
+					"Timeout Cannot Be Parsed",
+					fmt.Sprintf(`timeout for "create" cannot be parsed, time: unknown unit "x" in duration "10x"`),
+				),
+			},
 		},
 	}
 
@@ -208,7 +219,7 @@ func TestTimeoutsValueCreate(t *testing.T) {
 				t.Errorf("unexpected timeout difference: %s", diff)
 			}
 
-			if diff := cmp.Diff(gotErr, test.expectedErr, equateErrorMessage); diff != "" {
+			if diff := cmp.Diff(gotErr, test.expectedDiags, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected err difference: %s", diff)
 			}
 		})
@@ -221,7 +232,7 @@ func TestTimeoutsValueRead(t *testing.T) {
 	type testCase struct {
 		timeoutsValue   timeouts.TimeoutsValue
 		expectedTimeout time.Duration
-		expectedErr     error
+		expectedDiags   diag.Diagnostics
 	}
 	tests := map[string]testCase{
 		"read": {
@@ -236,14 +247,19 @@ func TestTimeoutsValueRead(t *testing.T) {
 				),
 			},
 			expectedTimeout: 10 * time.Minute,
-			expectedErr:     nil,
+			expectedDiags:   nil,
 		},
 		"read-not-set": {
 			timeoutsValue: timeouts.TimeoutsValue{
 				Object: types.Object{},
 			},
 			expectedTimeout: 20 * time.Minute,
-			expectedErr:     fmt.Errorf(`timeout for "read" does not exist`),
+			expectedDiags: diag.Diagnostics{
+				diag.NewErrorDiagnostic(
+					"Timeout Does Not Exist",
+					fmt.Sprintf(`timeout for "read" does not exist`),
+				),
+			},
 		},
 		"read-not-parseable-as-time-duration": {
 			timeoutsValue: timeouts.TimeoutsValue{
@@ -257,7 +273,12 @@ func TestTimeoutsValueRead(t *testing.T) {
 				),
 			},
 			expectedTimeout: 20 * time.Minute,
-			expectedErr:     fmt.Errorf(`time: unknown unit "x" in duration "10x"`),
+			expectedDiags: diag.Diagnostics{
+				diag.NewErrorDiagnostic(
+					"Timeout Cannot Be Parsed",
+					fmt.Sprintf(`timeout for "read" cannot be parsed, time: unknown unit "x" in duration "10x"`),
+				),
+			},
 		},
 	}
 
@@ -272,7 +293,7 @@ func TestTimeoutsValueRead(t *testing.T) {
 				t.Errorf("unexpected timeout difference: %s", diff)
 			}
 
-			if diff := cmp.Diff(gotErr, test.expectedErr, equateErrorMessage); diff != "" {
+			if diff := cmp.Diff(gotErr, test.expectedDiags, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected err difference: %s", diff)
 			}
 		})
@@ -285,7 +306,7 @@ func TestTimeoutsValueUpdate(t *testing.T) {
 	type testCase struct {
 		timeoutsValue   timeouts.TimeoutsValue
 		expectedTimeout time.Duration
-		expectedErr     error
+		expectedDiags   diag.Diagnostics
 	}
 	tests := map[string]testCase{
 		"update": {
@@ -300,14 +321,19 @@ func TestTimeoutsValueUpdate(t *testing.T) {
 				),
 			},
 			expectedTimeout: 10 * time.Minute,
-			expectedErr:     nil,
+			expectedDiags:   nil,
 		},
 		"update-not-set": {
 			timeoutsValue: timeouts.TimeoutsValue{
 				Object: types.Object{},
 			},
 			expectedTimeout: 20 * time.Minute,
-			expectedErr:     fmt.Errorf(`timeout for "update" does not exist`),
+			expectedDiags: diag.Diagnostics{
+				diag.NewErrorDiagnostic(
+					"Timeout Does Not Exist",
+					fmt.Sprintf(`timeout for "update" does not exist`),
+				),
+			},
 		},
 		"update-not-parseable-as-time-duration": {
 			timeoutsValue: timeouts.TimeoutsValue{
@@ -321,7 +347,12 @@ func TestTimeoutsValueUpdate(t *testing.T) {
 				),
 			},
 			expectedTimeout: 20 * time.Minute,
-			expectedErr:     fmt.Errorf(`time: unknown unit "x" in duration "10x"`),
+			expectedDiags: diag.Diagnostics{
+				diag.NewErrorDiagnostic(
+					"Timeout Cannot Be Parsed",
+					fmt.Sprintf(`timeout for "update" cannot be parsed, time: unknown unit "x" in duration "10x"`),
+				),
+			},
 		},
 	}
 
@@ -336,7 +367,7 @@ func TestTimeoutsValueUpdate(t *testing.T) {
 				t.Errorf("unexpected timeout difference: %s", diff)
 			}
 
-			if diff := cmp.Diff(gotErr, test.expectedErr, equateErrorMessage); diff != "" {
+			if diff := cmp.Diff(gotErr, test.expectedDiags, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected err difference: %s", diff)
 			}
 		})
@@ -349,7 +380,7 @@ func TestTimeoutsValueDelete(t *testing.T) {
 	type testCase struct {
 		timeoutsValue   timeouts.TimeoutsValue
 		expectedTimeout time.Duration
-		expectedErr     error
+		expectedDiags   diag.Diagnostics
 	}
 	tests := map[string]testCase{
 		"delete": {
@@ -364,14 +395,19 @@ func TestTimeoutsValueDelete(t *testing.T) {
 				),
 			},
 			expectedTimeout: 10 * time.Minute,
-			expectedErr:     nil,
+			expectedDiags:   nil,
 		},
 		"delete-not-set": {
 			timeoutsValue: timeouts.TimeoutsValue{
 				Object: types.Object{},
 			},
 			expectedTimeout: 20 * time.Minute,
-			expectedErr:     fmt.Errorf(`timeout for "delete" does not exist`),
+			expectedDiags: diag.Diagnostics{
+				diag.NewErrorDiagnostic(
+					"Timeout Does Not Exist",
+					fmt.Sprintf(`timeout for "delete" does not exist`),
+				),
+			},
 		},
 		"delete-not-parseable-as-time-duration": {
 			timeoutsValue: timeouts.TimeoutsValue{
@@ -385,7 +421,12 @@ func TestTimeoutsValueDelete(t *testing.T) {
 				),
 			},
 			expectedTimeout: 20 * time.Minute,
-			expectedErr:     fmt.Errorf(`time: unknown unit "x" in duration "10x"`),
+			expectedDiags: diag.Diagnostics{
+				diag.NewErrorDiagnostic(
+					"Timeout Cannot Be Parsed",
+					fmt.Sprintf(`timeout for "delete" cannot be parsed, time: unknown unit "x" in duration "10x"`),
+				),
+			},
 		},
 	}
 
@@ -400,7 +441,7 @@ func TestTimeoutsValueDelete(t *testing.T) {
 				t.Errorf("unexpected timeout difference: %s", diff)
 			}
 
-			if diff := cmp.Diff(gotErr, test.expectedErr, equateErrorMessage); diff != "" {
+			if diff := cmp.Diff(gotErr, test.expectedDiags, equateErrorMessage); diff != "" {
 				t.Errorf("unexpected err difference: %s", diff)
 			}
 		})

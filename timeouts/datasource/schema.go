@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
-	timeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/type"
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts"
 )
 
 const (

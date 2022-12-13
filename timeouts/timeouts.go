@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
@@ -80,41 +81,53 @@ func (t TimeoutsValue) Type(ctx context.Context) attr.Type {
 }
 
 // Create attempts to retrieve the "create" attribute and parse it as time.Duration.
-// If any errors are generated they are returned along with the default timeout of 20 minutes.
-func (t TimeoutsValue) Create(ctx context.Context) (time.Duration, error) {
+// If any diagnostics are generated they are returned along with the default timeout of 20 minutes.
+func (t TimeoutsValue) Create(ctx context.Context) (time.Duration, diag.Diagnostics) {
 	return t.getTimeout(ctx, attributeNameCreate)
 }
 
 // Read attempts to retrieve the "read" attribute and parse it as time.Duration.
-// If any errors are generated they are returned along with the default timeout of 20 minutes.
-func (t TimeoutsValue) Read(ctx context.Context) (time.Duration, error) {
+// If any diagnostics are generated they are returned along with the default timeout of 20 minutes.
+func (t TimeoutsValue) Read(ctx context.Context) (time.Duration, diag.Diagnostics) {
 	return t.getTimeout(ctx, attributeNameRead)
 }
 
 // Update attempts to retrieve the "update" attribute and parse it as time.Duration.
-// If any errors are generated they are returned along with the default timeout of 20 minutes.
-func (t TimeoutsValue) Update(ctx context.Context) (time.Duration, error) {
+// If any diagnostics are generated they are returned along with the default timeout of 20 minutes.
+func (t TimeoutsValue) Update(ctx context.Context) (time.Duration, diag.Diagnostics) {
 	return t.getTimeout(ctx, attributeNameUpdate)
 }
 
 // Delete attempts to retrieve the "delete" attribute and parse it as time.Duration.
-// If any errors are generated they are returned along with the default timeout of 20 minutes.
-func (t TimeoutsValue) Delete(ctx context.Context) (time.Duration, error) {
+// If any diagnostics are generated they are returned along with the default timeout of 20 minutes.
+func (t TimeoutsValue) Delete(ctx context.Context) (time.Duration, diag.Diagnostics) {
 	return t.getTimeout(ctx, attributeNameDelete)
 }
 
-func (t TimeoutsValue) getTimeout(_ context.Context, timeoutName string) (time.Duration, error) {
+func (t TimeoutsValue) getTimeout(_ context.Context, timeoutName string) (time.Duration, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	value, ok := t.Object.Attributes()[timeoutName]
 	if !ok {
-		return defaultTimeout, fmt.Errorf("timeout for %q does not exist", timeoutName)
+		diags.Append(diag.NewErrorDiagnostic(
+			"Timeout Does Not Exist",
+			fmt.Sprintf("timeout for %q does not exist", timeoutName),
+		))
+
+		return defaultTimeout, diags
 	}
 
 	// No type assertion check is required as the schema guarantees that the object attributes
 	// are types.String.
 	createTimeout, err := time.ParseDuration(value.(types.String).ValueString())
 	if err != nil {
-		return defaultTimeout, err
+		diags.Append(diag.NewErrorDiagnostic(
+			"Timeout Cannot Be Parsed",
+			fmt.Sprintf("timeout for %q cannot be parsed, %s", timeoutName, err),
+		))
+
+		return defaultTimeout, diags
 	}
 
-	return createTimeout, nil
+	return createTimeout, diags
 }
