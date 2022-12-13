@@ -2,7 +2,6 @@ package timeouts_test
 
 import (
 	"context"
-	"fmt"
 	"testing"
 	"time"
 
@@ -183,7 +182,7 @@ func TestTimeoutsValueCreate(t *testing.T) {
 			expectedDiags: diag.Diagnostics{
 				diag.NewErrorDiagnostic(
 					"Timeout Does Not Exist",
-					fmt.Sprintf(`timeout for "create" does not exist`),
+					`timeout for "create" does not exist`,
 				),
 			},
 		},
@@ -202,7 +201,7 @@ func TestTimeoutsValueCreate(t *testing.T) {
 			expectedDiags: diag.Diagnostics{
 				diag.NewErrorDiagnostic(
 					"Timeout Cannot Be Parsed",
-					fmt.Sprintf(`timeout for "create" cannot be parsed, time: unknown unit "x" in duration "10x"`),
+					`timeout for "create" cannot be parsed, time: unknown unit "x" in duration "10x"`,
 				),
 			},
 		},
@@ -257,7 +256,7 @@ func TestTimeoutsValueRead(t *testing.T) {
 			expectedDiags: diag.Diagnostics{
 				diag.NewErrorDiagnostic(
 					"Timeout Does Not Exist",
-					fmt.Sprintf(`timeout for "read" does not exist`),
+					`timeout for "read" does not exist`,
 				),
 			},
 		},
@@ -276,7 +275,7 @@ func TestTimeoutsValueRead(t *testing.T) {
 			expectedDiags: diag.Diagnostics{
 				diag.NewErrorDiagnostic(
 					"Timeout Cannot Be Parsed",
-					fmt.Sprintf(`timeout for "read" cannot be parsed, time: unknown unit "x" in duration "10x"`),
+					`timeout for "read" cannot be parsed, time: unknown unit "x" in duration "10x"`,
 				),
 			},
 		},
@@ -331,7 +330,7 @@ func TestTimeoutsValueUpdate(t *testing.T) {
 			expectedDiags: diag.Diagnostics{
 				diag.NewErrorDiagnostic(
 					"Timeout Does Not Exist",
-					fmt.Sprintf(`timeout for "update" does not exist`),
+					`timeout for "update" does not exist`,
 				),
 			},
 		},
@@ -350,7 +349,7 @@ func TestTimeoutsValueUpdate(t *testing.T) {
 			expectedDiags: diag.Diagnostics{
 				diag.NewErrorDiagnostic(
 					"Timeout Cannot Be Parsed",
-					fmt.Sprintf(`timeout for "update" cannot be parsed, time: unknown unit "x" in duration "10x"`),
+					`timeout for "update" cannot be parsed, time: unknown unit "x" in duration "10x"`,
 				),
 			},
 		},
@@ -405,7 +404,7 @@ func TestTimeoutsValueDelete(t *testing.T) {
 			expectedDiags: diag.Diagnostics{
 				diag.NewErrorDiagnostic(
 					"Timeout Does Not Exist",
-					fmt.Sprintf(`timeout for "delete" does not exist`),
+					`timeout for "delete" does not exist`,
 				),
 			},
 		},
@@ -424,7 +423,7 @@ func TestTimeoutsValueDelete(t *testing.T) {
 			expectedDiags: diag.Diagnostics{
 				diag.NewErrorDiagnostic(
 					"Timeout Cannot Be Parsed",
-					fmt.Sprintf(`timeout for "delete" cannot be parsed, time: unknown unit "x" in duration "10x"`),
+					`timeout for "delete" cannot be parsed, time: unknown unit "x" in duration "10x"`,
 				),
 			},
 		},
