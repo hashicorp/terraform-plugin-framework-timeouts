@@ -19,65 +19,20 @@ func TestBlock(t *testing.T) {
 	t.Parallel()
 
 	type testCase struct {
-		opts     datasourcetimeouts.Opts
 		expected schema.Block
 	}
 	tests := map[string]testCase{
-		"empty-opts": {
-			opts: datasourcetimeouts.Opts{},
-			expected: schema.SingleNestedBlock{
-				CustomType: timeouts.TimeoutsType{
-					ObjectType: types.ObjectType{
-						AttrTypes: map[string]attr.Type{},
-					},
-				},
-				Attributes: map[string]schema.Attribute{},
-			},
-		},
-		"create-opts": {
-			opts: datasourcetimeouts.Opts{
-				Create: true,
-			},
+		"read": {
 			expected: schema.SingleNestedBlock{
 				CustomType: timeouts.TimeoutsType{
 					ObjectType: types.ObjectType{
 						AttrTypes: map[string]attr.Type{
-							"create": types.StringType,
+							"read": types.StringType,
 						},
 					},
 				},
 				Attributes: map[string]schema.Attribute{
-					"create": schema.StringAttribute{
-						Optional: true,
-						Validators: []validator.String{
-							validators.TimeDurationString(),
-						},
-					},
-				},
-			},
-		},
-		"create-update-opts": {
-			opts: datasourcetimeouts.Opts{
-				Create: true,
-				Update: true,
-			},
-			expected: schema.SingleNestedBlock{
-				CustomType: timeouts.TimeoutsType{
-					ObjectType: types.ObjectType{
-						AttrTypes: map[string]attr.Type{
-							"create": types.StringType,
-							"update": types.StringType,
-						},
-					},
-				},
-				Attributes: map[string]schema.Attribute{
-					"create": schema.StringAttribute{
-						Optional: true,
-						Validators: []validator.String{
-							validators.TimeDurationString(),
-						},
-					},
-					"update": schema.StringAttribute{
+					"read": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
 							validators.TimeDurationString(),
@@ -91,61 +46,12 @@ func TestBlock(t *testing.T) {
 	for name, test := range tests {
 		name, test := name, test
 		t.Run(name, func(t *testing.T) {
-			actual := datasourcetimeouts.Block(context.Background(), test.opts)
+			actual := datasourcetimeouts.Block(context.Background())
 
 			if diff := cmp.Diff(actual, test.expected); diff != "" {
 				t.Errorf("unexpected block difference: %s", diff)
 			}
 		})
-	}
-}
-
-func TestBlockAll(t *testing.T) {
-	t.Parallel()
-
-	actual := datasourcetimeouts.BlockAll(context.Background())
-
-	expected := schema.SingleNestedBlock{
-		CustomType: timeouts.TimeoutsType{
-			ObjectType: types.ObjectType{
-				AttrTypes: map[string]attr.Type{
-					"create": types.StringType,
-					"read":   types.StringType,
-					"update": types.StringType,
-					"delete": types.StringType,
-				},
-			},
-		},
-		Attributes: map[string]schema.Attribute{
-			"create": schema.StringAttribute{
-				Optional: true,
-				Validators: []validator.String{
-					validators.TimeDurationString(),
-				},
-			},
-			"read": schema.StringAttribute{
-				Optional: true,
-				Validators: []validator.String{
-					validators.TimeDurationString(),
-				},
-			},
-			"update": schema.StringAttribute{
-				Optional: true,
-				Validators: []validator.String{
-					validators.TimeDurationString(),
-				},
-			},
-			"delete": schema.StringAttribute{
-				Optional: true,
-				Validators: []validator.String{
-					validators.TimeDurationString(),
-				},
-			},
-		},
-	}
-
-	if diff := cmp.Diff(actual, expected); diff != "" {
-		t.Errorf("unexpected block difference: %s", diff)
 	}
 }
 
@@ -153,29 +59,13 @@ func TestAttributes(t *testing.T) {
 	t.Parallel()
 
 	type testCase struct {
-		opts     datasourcetimeouts.Opts
 		expected schema.Attribute
 	}
 	tests := map[string]testCase{
-		"empty-opts": {
-			opts: datasourcetimeouts.Opts{},
-			expected: schema.SingleNestedAttribute{
-				Attributes: map[string]schema.Attribute{},
-				CustomType: timeouts.TimeoutsType{
-					ObjectType: types.ObjectType{
-						AttrTypes: map[string]attr.Type{},
-					},
-				},
-				Optional: true,
-			},
-		},
-		"create-opts": {
-			opts: datasourcetimeouts.Opts{
-				Create: true,
-			},
+		"read": {
 			expected: schema.SingleNestedAttribute{
 				Attributes: map[string]schema.Attribute{
-					"create": schema.StringAttribute{
+					"read": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
 							validators.TimeDurationString(),
@@ -185,38 +75,7 @@ func TestAttributes(t *testing.T) {
 				CustomType: timeouts.TimeoutsType{
 					ObjectType: types.ObjectType{
 						AttrTypes: map[string]attr.Type{
-							"create": types.StringType,
-						},
-					},
-				},
-				Optional: true,
-			},
-		},
-		"create-update-opts": {
-			opts: datasourcetimeouts.Opts{
-				Create: true,
-				Update: true,
-			},
-			expected: schema.SingleNestedAttribute{
-				Attributes: map[string]schema.Attribute{
-					"create": schema.StringAttribute{
-						Optional: true,
-						Validators: []validator.String{
-							validators.TimeDurationString(),
-						},
-					},
-					"update": schema.StringAttribute{
-						Optional: true,
-						Validators: []validator.String{
-							validators.TimeDurationString(),
-						},
-					},
-				},
-				CustomType: timeouts.TimeoutsType{
-					ObjectType: types.ObjectType{
-						AttrTypes: map[string]attr.Type{
-							"create": types.StringType,
-							"update": types.StringType,
+							"read": types.StringType,
 						},
 					},
 				},
@@ -228,61 +87,11 @@ func TestAttributes(t *testing.T) {
 	for name, test := range tests {
 		name, test := name, test
 		t.Run(name, func(t *testing.T) {
-			actual := datasourcetimeouts.Attributes(context.Background(), test.opts)
+			actual := datasourcetimeouts.Attributes(context.Background())
 
 			if diff := cmp.Diff(actual, test.expected); diff != "" {
 				t.Errorf("unexpected block difference: %s", diff)
 			}
 		})
-	}
-}
-
-func TestAttributesAll(t *testing.T) {
-	t.Parallel()
-
-	actual := datasourcetimeouts.AttributesAll(context.Background())
-
-	expected := schema.SingleNestedAttribute{
-		Attributes: map[string]schema.Attribute{
-			"create": schema.StringAttribute{
-				Optional: true,
-				Validators: []validator.String{
-					validators.TimeDurationString(),
-				},
-			},
-			"read": schema.StringAttribute{
-				Optional: true,
-				Validators: []validator.String{
-					validators.TimeDurationString(),
-				},
-			},
-			"update": schema.StringAttribute{
-				Optional: true,
-				Validators: []validator.String{
-					validators.TimeDurationString(),
-				},
-			},
-			"delete": schema.StringAttribute{
-				Optional: true,
-				Validators: []validator.String{
-					validators.TimeDurationString(),
-				},
-			},
-		},
-		CustomType: timeouts.TimeoutsType{
-			ObjectType: types.ObjectType{
-				AttrTypes: map[string]attr.Type{
-					"create": types.StringType,
-					"read":   types.StringType,
-					"update": types.StringType,
-					"delete": types.StringType,
-				},
-			},
-		},
-		Optional: true,
-	}
-
-	if diff := cmp.Diff(actual, expected); diff != "" {
-		t.Errorf("unexpected block difference: %s", diff)
 	}
 }
