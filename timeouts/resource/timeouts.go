@@ -11,23 +11,17 @@ import (
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
-const (
-	defaultTimeout      = time.Minute * 20
-	attributeNameCreate = "create"
-	attributeNameRead   = "read"
-	attributeNameUpdate = "update"
-	attributeNameDelete = "delete"
-)
+const defaultTimeout = time.Minute * 20
 
-// TimeoutsType is an attribute type that represents timeouts.
-type TimeoutsType struct {
+// Type is an attribute type that represents timeouts.
+type Type struct {
 	types.ObjectType
 }
 
-// ValueFromTerraform returns a TimeoutsValue given a tftypes.Value.
-// TimeoutsValue embeds the types.Object value returned from calling ValueFromTerraform on the
-// types.ObjectType embedded in TimeoutsType.
-func (t TimeoutsType) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
+// ValueFromTerraform returns a Value given a tftypes.Value.
+// Value embeds the types.Object value returned from calling ValueFromTerraform on the
+// types.ObjectType embedded in Type.
+func (t Type) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Value, error) {
 	val, err := t.ObjectType.ValueFromTerraform(ctx, in)
 	if err != nil {
 		return nil, err
@@ -38,15 +32,15 @@ func (t TimeoutsType) ValueFromTerraform(ctx context.Context, in tftypes.Value) 
 		return nil, fmt.Errorf("%T cannot be used as types.Object", val)
 	}
 
-	return TimeoutsValue{
+	return Value{
 		obj,
 	}, err
 }
 
-// Equal returns true if `candidate` is also an TimeoutsType and has the same
+// Equal returns true if `candidate` is also a Type and has the same
 // AttributeTypes.
-func (t TimeoutsType) Equal(candidate attr.Type) bool {
-	other, ok := candidate.(TimeoutsType)
+func (t Type) Equal(candidate attr.Type) bool {
+	other, ok := candidate.(Type)
 	if !ok {
 		return false
 	}
@@ -54,15 +48,15 @@ func (t TimeoutsType) Equal(candidate attr.Type) bool {
 	return t.ObjectType.Equal(other.ObjectType)
 }
 
-// TimeoutsValue represents an object containing values to be used as time.Duration for timeouts.
-type TimeoutsValue struct {
+// Value represents an object containing values to be used as time.Duration for timeouts.
+type Value struct {
 	types.Object
 }
 
-// Equal returns true if the TimeoutsValue is considered semantically equal
+// Equal returns true if the Value is considered semantically equal
 // (same type and same value) to the attr.Value passed as an argument.
-func (t TimeoutsValue) Equal(c attr.Value) bool {
-	other, ok := c.(TimeoutsValue)
+func (t Value) Equal(c attr.Value) bool {
+	other, ok := c.(Value)
 
 	if !ok {
 		return false
@@ -71,9 +65,9 @@ func (t TimeoutsValue) Equal(c attr.Value) bool {
 	return t.Object.Equal(other.Object)
 }
 
-// Type returns an TimeoutsType with the same attribute types as `t`.
-func (t TimeoutsValue) Type(ctx context.Context) attr.Type {
-	return TimeoutsType{
+// Type returns an Type with the same attribute types as `t`.
+func (t Value) Type(ctx context.Context) attr.Type {
+	return Type{
 		types.ObjectType{
 			AttrTypes: t.AttributeTypes(ctx),
 		},
@@ -82,29 +76,29 @@ func (t TimeoutsValue) Type(ctx context.Context) attr.Type {
 
 // Create attempts to retrieve the "create" attribute and parse it as time.Duration.
 // If any diagnostics are generated they are returned along with the default timeout of 20 minutes.
-func (t TimeoutsValue) Create(ctx context.Context) (time.Duration, diag.Diagnostics) {
+func (t Value) Create(ctx context.Context) (time.Duration, diag.Diagnostics) {
 	return t.getTimeout(ctx, attributeNameCreate)
 }
 
 // Read attempts to retrieve the "read" attribute and parse it as time.Duration.
 // If any diagnostics are generated they are returned along with the default timeout of 20 minutes.
-func (t TimeoutsValue) Read(ctx context.Context) (time.Duration, diag.Diagnostics) {
+func (t Value) Read(ctx context.Context) (time.Duration, diag.Diagnostics) {
 	return t.getTimeout(ctx, attributeNameRead)
 }
 
 // Update attempts to retrieve the "update" attribute and parse it as time.Duration.
 // If any diagnostics are generated they are returned along with the default timeout of 20 minutes.
-func (t TimeoutsValue) Update(ctx context.Context) (time.Duration, diag.Diagnostics) {
+func (t Value) Update(ctx context.Context) (time.Duration, diag.Diagnostics) {
 	return t.getTimeout(ctx, attributeNameUpdate)
 }
 
 // Delete attempts to retrieve the "delete" attribute and parse it as time.Duration.
 // If any diagnostics are generated they are returned along with the default timeout of 20 minutes.
-func (t TimeoutsValue) Delete(ctx context.Context) (time.Duration, diag.Diagnostics) {
+func (t Value) Delete(ctx context.Context) (time.Duration, diag.Diagnostics) {
 	return t.getTimeout(ctx, attributeNameDelete)
 }
 
-func (t TimeoutsValue) getTimeout(_ context.Context, timeoutName string) (time.Duration, diag.Diagnostics) {
+func (t Value) getTimeout(_ context.Context, timeoutName string) (time.Duration, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
 	value, ok := t.Object.Attributes()[timeoutName]
@@ -119,7 +113,7 @@ func (t TimeoutsValue) getTimeout(_ context.Context, timeoutName string) (time.D
 
 	// No type assertion check is required as the schema guarantees that the object attributes
 	// are types.String.
-	createTimeout, err := time.ParseDuration(value.(types.String).ValueString())
+	timeout, err := time.ParseDuration(value.(types.String).ValueString())
 	if err != nil {
 		diags.Append(diag.NewErrorDiagnostic(
 			"Timeout Cannot Be Parsed",
@@ -129,5 +123,5 @@ func (t TimeoutsValue) getTimeout(_ context.Context, timeoutName string) (time.D
 		return defaultTimeout, diags
 	}
 
-	return createTimeout, diags
+	return timeout, diags
 }

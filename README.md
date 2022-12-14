@@ -36,9 +36,9 @@ Terraform configuration.
 
 #### Block
 
-If your configuration is using a nested block to define timeouts, such as the following:
+The following illustrates nested block syntax for defining timeouts on a resource and a data source.
 
-```terraform
+```hcl
 resource "timeouts_example" "example" {
   /* ... */
 
@@ -48,25 +48,63 @@ resource "timeouts_example" "example" {
 }
 ```
 
-You can use this module to mutate the `schema.Schema` as follows:
+```hcl
+data "timeouts_example" "example" {
+  /* ... */
+
+  timeouts {
+    read = "30m"
+  }
+}
+```
+
+Use this module to mutate the `schema.Schema`:
+
+You must supply `timeouts.Opts` when calling `timeouts.Block()` on a resource. Alternatively, `timeouts.BlockAll()` will generate attributes for `create`, `read`, `update` and `delete`.
 
 ```go
+import (
+    /* ... */
+    "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/resource"
+)
+
 func (t *exampleResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-    return tfsdk.Schema{
+    resp.Schema = schema.Schema{
+        /* ... */
+        
+        Blocks: map[string]schema.Block{
+            "timeouts": timeouts.Block(ctx,
+                timeouts.Opts{
+                    Create: true,
+                },
+             )
+        },
+```
+
+The `timeouts.Block()` call does not accept options on a data source as `read` is the only option.
+
+```go
+import (
+    /* ... */
+    "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/datasource"
+)
+
+func (t exampleDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+    resp.Schema = schema.Schema{
         /* ... */
 
-        Blocks: map[string]tfsdk.Block{
-            "timeouts": timeouts.Block(ctx, timeouts.Opts{
-                Create: true,
-            }),
+        Blocks: map[string]schema.Block{
+            "timeouts": timeouts.Block(ctx),
         },
+    }
+}
 ```
 
 #### Attribute 
 
-If your configuration is using nested attributes to define timeouts, such as the following:
+The following illustrates nested attribute syntax for defining timeouts on a resource and a data source.
 
-```terraform
+```hcl
 resource "timeouts_example" "example" {
   /* ... */
 
@@ -76,17 +114,52 @@ resource "timeouts_example" "example" {
 }
 ```
 
-You can use this module to mutate the `schema.Schema` as follows:
+```hcl
+data "timeouts_example" "example" {
+  /* ... */
+
+  timeouts = {
+    read = "30m"
+  }
+}
+```
+
+Use this module to mutate the `schema.Schema` as follows:
+
+You must supply `timeouts.Opts` when calling `timeouts.Attributes()` on a resource.
 
 ```go
+import (
+    /* ... */
+    "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/resource"
+)
+
 func (t *exampleResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-    return tfsdk.Schema{
-        Attributes: map[string]tfsdk.Attribute{
+    resp.Schema = schema.Schema{
+        Attributes: map[string]schema.Attribute{
             /* ... */
             "timeouts": timeouts.Attributes(ctx, timeouts.Opts{
                 Create: true,
             }),
         },
+```
+
+The `timeouts.Attributes()` call does not accept options on a data source as `read` is the only option.
+
+```go
+import (
+    /* ... */
+    "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/datasource"
+)
+
+func (t exampleDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+    resp.Schema = schema.Schema{
+        Attributes: map[string]schema.Attribute{
+            /* ... */
+            "timeouts": timeouts.Attributes(ctx),
+        },
+    }
+}
 ```
 
 ### Updating Models
@@ -95,19 +168,19 @@ In functions in which the config, state or plan is being unmarshalled, for insta
 
 ```go
 func (r exampleResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data exampleResourceData
+    var data exampleResourceData
 
-	diags := req.Plan.Get(ctx, &data)
-	resp.Diagnostics.Append(diags...)
+    diags := req.Plan.Get(ctx, &data)
+    resp.Diagnostics.Append(diags...)
 ```
 
 The model that is being used, `exampleResourceData` in this example, will need to be modified to include a field for
-timeouts which is of type `timeouts.TimeoutsValue`. For example:
+timeouts which is of type `timeouts.Value`. For example:
 
 ```go
 type exampleResourceData struct {
     /* ... */
-    Timeouts    timeouts.TimeoutsValue `tfsdk:"timeouts"`
+    Timeouts    timeouts.Value `tfsdk:"timeouts"`
 ```
 
 ### Accessing Timeouts in CRUD Functions
@@ -129,10 +202,10 @@ func (r exampleResource) Create(ctx context.Context, req resource.CreateRequest,
     if err != nil {
         // handle error
     }
-	
+    
     ctx, cancel := context.WithTimeout(ctx, createTimeout)
     defer cancel()
-	
+    
     /* ... */
 }
 ```

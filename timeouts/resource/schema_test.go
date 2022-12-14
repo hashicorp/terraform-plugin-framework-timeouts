@@ -11,22 +11,21 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
-	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts"
-	resourcetimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/resource"
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/resource"
 )
 
 func TestBlock(t *testing.T) {
 	t.Parallel()
 
 	type testCase struct {
-		opts     resourcetimeouts.Opts
+		opts     timeouts.Opts
 		expected schema.Block
 	}
 	tests := map[string]testCase{
 		"empty-opts": {
-			opts: resourcetimeouts.Opts{},
+			opts: timeouts.Opts{},
 			expected: schema.SingleNestedBlock{
-				CustomType: timeouts.TimeoutsType{
+				CustomType: timeouts.Type{
 					ObjectType: types.ObjectType{
 						AttrTypes: map[string]attr.Type{},
 					},
@@ -35,11 +34,11 @@ func TestBlock(t *testing.T) {
 			},
 		},
 		"create-opts": {
-			opts: resourcetimeouts.Opts{
+			opts: timeouts.Opts{
 				Create: true,
 			},
 			expected: schema.SingleNestedBlock{
-				CustomType: timeouts.TimeoutsType{
+				CustomType: timeouts.Type{
 					ObjectType: types.ObjectType{
 						AttrTypes: map[string]attr.Type{
 							"create": types.StringType,
@@ -50,19 +49,19 @@ func TestBlock(t *testing.T) {
 					"create": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
-							validators.TimeDurationString(),
+							validators.TimeDuration(),
 						},
 					},
 				},
 			},
 		},
 		"create-update-opts": {
-			opts: resourcetimeouts.Opts{
+			opts: timeouts.Opts{
 				Create: true,
 				Update: true,
 			},
 			expected: schema.SingleNestedBlock{
-				CustomType: timeouts.TimeoutsType{
+				CustomType: timeouts.Type{
 					ObjectType: types.ObjectType{
 						AttrTypes: map[string]attr.Type{
 							"create": types.StringType,
@@ -74,13 +73,13 @@ func TestBlock(t *testing.T) {
 					"create": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
-							validators.TimeDurationString(),
+							validators.TimeDuration(),
 						},
 					},
 					"update": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
-							validators.TimeDurationString(),
+							validators.TimeDuration(),
 						},
 					},
 				},
@@ -91,7 +90,7 @@ func TestBlock(t *testing.T) {
 	for name, test := range tests {
 		name, test := name, test
 		t.Run(name, func(t *testing.T) {
-			actual := resourcetimeouts.Block(context.Background(), test.opts)
+			actual := timeouts.Block(context.Background(), test.opts)
 
 			if diff := cmp.Diff(actual, test.expected); diff != "" {
 				t.Errorf("unexpected block difference: %s", diff)
@@ -103,10 +102,10 @@ func TestBlock(t *testing.T) {
 func TestBlockAll(t *testing.T) {
 	t.Parallel()
 
-	actual := resourcetimeouts.BlockAll(context.Background())
+	actual := timeouts.BlockAll(context.Background())
 
 	expected := schema.SingleNestedBlock{
-		CustomType: timeouts.TimeoutsType{
+		CustomType: timeouts.Type{
 			ObjectType: types.ObjectType{
 				AttrTypes: map[string]attr.Type{
 					"create": types.StringType,
@@ -120,25 +119,25 @@ func TestBlockAll(t *testing.T) {
 			"create": schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
-					validators.TimeDurationString(),
+					validators.TimeDuration(),
 				},
 			},
 			"read": schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
-					validators.TimeDurationString(),
+					validators.TimeDuration(),
 				},
 			},
 			"update": schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
-					validators.TimeDurationString(),
+					validators.TimeDuration(),
 				},
 			},
 			"delete": schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
-					validators.TimeDurationString(),
+					validators.TimeDuration(),
 				},
 			},
 		},
@@ -153,15 +152,15 @@ func TestAttributes(t *testing.T) {
 	t.Parallel()
 
 	type testCase struct {
-		opts     resourcetimeouts.Opts
+		opts     timeouts.Opts
 		expected schema.Attribute
 	}
 	tests := map[string]testCase{
 		"empty-opts": {
-			opts: resourcetimeouts.Opts{},
+			opts: timeouts.Opts{},
 			expected: schema.SingleNestedAttribute{
 				Attributes: map[string]schema.Attribute{},
-				CustomType: timeouts.TimeoutsType{
+				CustomType: timeouts.Type{
 					ObjectType: types.ObjectType{
 						AttrTypes: map[string]attr.Type{},
 					},
@@ -170,7 +169,7 @@ func TestAttributes(t *testing.T) {
 			},
 		},
 		"create-opts": {
-			opts: resourcetimeouts.Opts{
+			opts: timeouts.Opts{
 				Create: true,
 			},
 			expected: schema.SingleNestedAttribute{
@@ -178,11 +177,11 @@ func TestAttributes(t *testing.T) {
 					"create": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
-							validators.TimeDurationString(),
+							validators.TimeDuration(),
 						},
 					},
 				},
-				CustomType: timeouts.TimeoutsType{
+				CustomType: timeouts.Type{
 					ObjectType: types.ObjectType{
 						AttrTypes: map[string]attr.Type{
 							"create": types.StringType,
@@ -193,7 +192,7 @@ func TestAttributes(t *testing.T) {
 			},
 		},
 		"create-update-opts": {
-			opts: resourcetimeouts.Opts{
+			opts: timeouts.Opts{
 				Create: true,
 				Update: true,
 			},
@@ -202,17 +201,17 @@ func TestAttributes(t *testing.T) {
 					"create": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
-							validators.TimeDurationString(),
+							validators.TimeDuration(),
 						},
 					},
 					"update": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
-							validators.TimeDurationString(),
+							validators.TimeDuration(),
 						},
 					},
 				},
-				CustomType: timeouts.TimeoutsType{
+				CustomType: timeouts.Type{
 					ObjectType: types.ObjectType{
 						AttrTypes: map[string]attr.Type{
 							"create": types.StringType,
@@ -228,7 +227,7 @@ func TestAttributes(t *testing.T) {
 	for name, test := range tests {
 		name, test := name, test
 		t.Run(name, func(t *testing.T) {
-			actual := resourcetimeouts.Attributes(context.Background(), test.opts)
+			actual := timeouts.Attributes(context.Background(), test.opts)
 
 			if diff := cmp.Diff(actual, test.expected); diff != "" {
 				t.Errorf("unexpected block difference: %s", diff)
@@ -240,36 +239,36 @@ func TestAttributes(t *testing.T) {
 func TestAttributesAll(t *testing.T) {
 	t.Parallel()
 
-	actual := resourcetimeouts.AttributesAll(context.Background())
+	actual := timeouts.AttributesAll(context.Background())
 
 	expected := schema.SingleNestedAttribute{
 		Attributes: map[string]schema.Attribute{
 			"create": schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
-					validators.TimeDurationString(),
+					validators.TimeDuration(),
 				},
 			},
 			"read": schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
-					validators.TimeDurationString(),
+					validators.TimeDuration(),
 				},
 			},
 			"update": schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
-					validators.TimeDurationString(),
+					validators.TimeDuration(),
 				},
 			},
 			"delete": schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
-					validators.TimeDurationString(),
+					validators.TimeDuration(),
 				},
 			},
 		},
-		CustomType: timeouts.TimeoutsType{
+		CustomType: timeouts.Type{
 			ObjectType: types.ObjectType{
 				AttrTypes: map[string]attr.Type{
 					"create": types.StringType,

@@ -11,21 +11,21 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 
-	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts"
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/resource"
 )
 
 func TestTimeoutsTypeValueFromTerraform(t *testing.T) {
 	t.Parallel()
 
 	type testCase struct {
-		receiver    timeouts.TimeoutsType
+		receiver    timeouts.Type
 		input       tftypes.Value
 		expected    attr.Value
 		expectedErr string
 	}
 	tests := map[string]testCase{
 		"basic-object": {
-			receiver: timeouts.TimeoutsType{
+			receiver: timeouts.Type{
 				ObjectType: types.ObjectType{
 					AttrTypes: map[string]attr.Type{
 						"create": types.StringType,
@@ -48,7 +48,7 @@ func TestTimeoutsTypeValueFromTerraform(t *testing.T) {
 				"update": tftypes.NewValue(tftypes.String, "10m"),
 				"delete": tftypes.NewValue(tftypes.String, "25m"),
 			}),
-			expected: timeouts.TimeoutsValue{
+			expected: timeouts.Value{
 				Object: types.ObjectValueMust(
 					map[string]attr.Type{
 						"create": types.StringType,
@@ -95,13 +95,13 @@ func TestTimeoutsTypeEqual(t *testing.T) {
 	t.Parallel()
 
 	type testCase struct {
-		receiver timeouts.TimeoutsType
+		receiver timeouts.Type
 		input    attr.Type
 		expected bool
 	}
 	tests := map[string]testCase{
 		"equal": {
-			receiver: timeouts.TimeoutsType{ObjectType: types.ObjectType{AttrTypes: map[string]attr.Type{
+			receiver: timeouts.Type{ObjectType: types.ObjectType{AttrTypes: map[string]attr.Type{
 				"a": types.StringType,
 				"b": types.NumberType,
 				"c": types.BoolType,
@@ -109,7 +109,7 @@ func TestTimeoutsTypeEqual(t *testing.T) {
 					ElemType: types.StringType,
 				},
 			}}},
-			input: timeouts.TimeoutsType{ObjectType: types.ObjectType{AttrTypes: map[string]attr.Type{
+			input: timeouts.Type{ObjectType: types.ObjectType{AttrTypes: map[string]attr.Type{
 				"a": types.StringType,
 				"b": types.NumberType,
 				"c": types.BoolType,
@@ -120,7 +120,7 @@ func TestTimeoutsTypeEqual(t *testing.T) {
 			expected: true,
 		},
 		"missing-attr": {
-			receiver: timeouts.TimeoutsType{ObjectType: types.ObjectType{AttrTypes: map[string]attr.Type{
+			receiver: timeouts.Type{ObjectType: types.ObjectType{AttrTypes: map[string]attr.Type{
 				"a": types.StringType,
 				"b": types.NumberType,
 				"c": types.BoolType,
@@ -128,7 +128,7 @@ func TestTimeoutsTypeEqual(t *testing.T) {
 					ElemType: types.StringType,
 				},
 			}}},
-			input: timeouts.TimeoutsType{ObjectType: types.ObjectType{AttrTypes: map[string]attr.Type{
+			input: timeouts.Type{ObjectType: types.ObjectType{AttrTypes: map[string]attr.Type{
 				"a": types.StringType,
 				"b": types.NumberType,
 				"d": types.ListType{
@@ -155,13 +155,13 @@ func TestTimeoutsValueCreate(t *testing.T) {
 	t.Parallel()
 
 	type testCase struct {
-		timeoutsValue   timeouts.TimeoutsValue
+		timeoutsValue   timeouts.Value
 		expectedTimeout time.Duration
 		expectedDiags   diag.Diagnostics
 	}
 	tests := map[string]testCase{
 		"create": {
-			timeoutsValue: timeouts.TimeoutsValue{
+			timeoutsValue: timeouts.Value{
 				Object: types.ObjectValueMust(
 					map[string]attr.Type{
 						"create": types.StringType,
@@ -175,7 +175,7 @@ func TestTimeoutsValueCreate(t *testing.T) {
 			expectedDiags:   nil,
 		},
 		"create-not-set": {
-			timeoutsValue: timeouts.TimeoutsValue{
+			timeoutsValue: timeouts.Value{
 				Object: types.Object{},
 			},
 			expectedTimeout: 20 * time.Minute,
@@ -187,7 +187,7 @@ func TestTimeoutsValueCreate(t *testing.T) {
 			},
 		},
 		"create-not-parseable-as-time-duration": {
-			timeoutsValue: timeouts.TimeoutsValue{
+			timeoutsValue: timeouts.Value{
 				Object: types.ObjectValueMust(
 					map[string]attr.Type{
 						"create": types.StringType,
@@ -229,13 +229,13 @@ func TestTimeoutsValueRead(t *testing.T) {
 	t.Parallel()
 
 	type testCase struct {
-		timeoutsValue   timeouts.TimeoutsValue
+		timeoutsValue   timeouts.Value
 		expectedTimeout time.Duration
 		expectedDiags   diag.Diagnostics
 	}
 	tests := map[string]testCase{
 		"read": {
-			timeoutsValue: timeouts.TimeoutsValue{
+			timeoutsValue: timeouts.Value{
 				Object: types.ObjectValueMust(
 					map[string]attr.Type{
 						"read": types.StringType,
@@ -249,7 +249,7 @@ func TestTimeoutsValueRead(t *testing.T) {
 			expectedDiags:   nil,
 		},
 		"read-not-set": {
-			timeoutsValue: timeouts.TimeoutsValue{
+			timeoutsValue: timeouts.Value{
 				Object: types.Object{},
 			},
 			expectedTimeout: 20 * time.Minute,
@@ -261,7 +261,7 @@ func TestTimeoutsValueRead(t *testing.T) {
 			},
 		},
 		"read-not-parseable-as-time-duration": {
-			timeoutsValue: timeouts.TimeoutsValue{
+			timeoutsValue: timeouts.Value{
 				Object: types.ObjectValueMust(
 					map[string]attr.Type{
 						"read": types.StringType,
@@ -303,13 +303,13 @@ func TestTimeoutsValueUpdate(t *testing.T) {
 	t.Parallel()
 
 	type testCase struct {
-		timeoutsValue   timeouts.TimeoutsValue
+		timeoutsValue   timeouts.Value
 		expectedTimeout time.Duration
 		expectedDiags   diag.Diagnostics
 	}
 	tests := map[string]testCase{
 		"update": {
-			timeoutsValue: timeouts.TimeoutsValue{
+			timeoutsValue: timeouts.Value{
 				Object: types.ObjectValueMust(
 					map[string]attr.Type{
 						"update": types.StringType,
@@ -323,7 +323,7 @@ func TestTimeoutsValueUpdate(t *testing.T) {
 			expectedDiags:   nil,
 		},
 		"update-not-set": {
-			timeoutsValue: timeouts.TimeoutsValue{
+			timeoutsValue: timeouts.Value{
 				Object: types.Object{},
 			},
 			expectedTimeout: 20 * time.Minute,
@@ -335,7 +335,7 @@ func TestTimeoutsValueUpdate(t *testing.T) {
 			},
 		},
 		"update-not-parseable-as-time-duration": {
-			timeoutsValue: timeouts.TimeoutsValue{
+			timeoutsValue: timeouts.Value{
 				Object: types.ObjectValueMust(
 					map[string]attr.Type{
 						"update": types.StringType,
@@ -377,13 +377,13 @@ func TestTimeoutsValueDelete(t *testing.T) {
 	t.Parallel()
 
 	type testCase struct {
-		timeoutsValue   timeouts.TimeoutsValue
+		timeoutsValue   timeouts.Value
 		expectedTimeout time.Duration
 		expectedDiags   diag.Diagnostics
 	}
 	tests := map[string]testCase{
 		"delete": {
-			timeoutsValue: timeouts.TimeoutsValue{
+			timeoutsValue: timeouts.Value{
 				Object: types.ObjectValueMust(
 					map[string]attr.Type{
 						"delete": types.StringType,
@@ -397,7 +397,7 @@ func TestTimeoutsValueDelete(t *testing.T) {
 			expectedDiags:   nil,
 		},
 		"delete-not-set": {
-			timeoutsValue: timeouts.TimeoutsValue{
+			timeoutsValue: timeouts.Value{
 				Object: types.Object{},
 			},
 			expectedTimeout: 20 * time.Minute,
@@ -409,7 +409,7 @@ func TestTimeoutsValueDelete(t *testing.T) {
 			},
 		},
 		"delete-not-parseable-as-time-duration": {
-			timeoutsValue: timeouts.TimeoutsValue{
+			timeoutsValue: timeouts.Value{
 				Object: types.ObjectValueMust(
 					map[string]attr.Type{
 						"delete": types.StringType,

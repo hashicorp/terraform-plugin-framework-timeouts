@@ -11,8 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
-	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts"
-	datasourcetimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/datasource"
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/datasource"
 )
 
 func TestBlock(t *testing.T) {
@@ -24,7 +23,7 @@ func TestBlock(t *testing.T) {
 	tests := map[string]testCase{
 		"read": {
 			expected: schema.SingleNestedBlock{
-				CustomType: timeouts.TimeoutsType{
+				CustomType: timeouts.Type{
 					ObjectType: types.ObjectType{
 						AttrTypes: map[string]attr.Type{
 							"read": types.StringType,
@@ -35,7 +34,7 @@ func TestBlock(t *testing.T) {
 					"read": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
-							validators.TimeDurationString(),
+							validators.TimeDuration(),
 						},
 					},
 				},
@@ -46,7 +45,7 @@ func TestBlock(t *testing.T) {
 	for name, test := range tests {
 		name, test := name, test
 		t.Run(name, func(t *testing.T) {
-			actual := datasourcetimeouts.Block(context.Background())
+			actual := timeouts.Block(context.Background())
 
 			if diff := cmp.Diff(actual, test.expected); diff != "" {
 				t.Errorf("unexpected block difference: %s", diff)
@@ -68,11 +67,11 @@ func TestAttributes(t *testing.T) {
 					"read": schema.StringAttribute{
 						Optional: true,
 						Validators: []validator.String{
-							validators.TimeDurationString(),
+							validators.TimeDuration(),
 						},
 					},
 				},
-				CustomType: timeouts.TimeoutsType{
+				CustomType: timeouts.Type{
 					ObjectType: types.ObjectType{
 						AttrTypes: map[string]attr.Type{
 							"read": types.StringType,
@@ -87,7 +86,7 @@ func TestAttributes(t *testing.T) {
 	for name, test := range tests {
 		name, test := name, test
 		t.Run(name, func(t *testing.T) {
-			actual := datasourcetimeouts.Attributes(context.Background())
+			actual := timeouts.Attributes(context.Background())
 
 			if diff := cmp.Diff(actual, test.expected); diff != "" {
 				t.Errorf("unexpected block difference: %s", diff)

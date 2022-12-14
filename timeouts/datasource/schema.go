@@ -9,7 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
-	"github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts"
 )
 
 const (
@@ -28,7 +27,7 @@ type Opts struct {
 func Block(ctx context.Context) schema.Block {
 	return schema.SingleNestedBlock{
 		Attributes: attributesMap(),
-		CustomType: timeouts.TimeoutsType{
+		CustomType: Type{
 			ObjectType: types.ObjectType{
 				AttrTypes: attrTypesMap(),
 			},
@@ -43,7 +42,7 @@ func Block(ctx context.Context) schema.Block {
 func Attributes(ctx context.Context) schema.Attribute {
 	return schema.SingleNestedAttribute{
 		Attributes: attributesMap(),
-		CustomType: timeouts.TimeoutsType{
+		CustomType: Type{
 			ObjectType: types.ObjectType{
 				AttrTypes: attrTypesMap(),
 			},
@@ -57,7 +56,7 @@ func attributesMap() map[string]schema.Attribute {
 		attributeNameRead: schema.StringAttribute{
 			Optional: true,
 			Validators: []validator.String{
-				validators.TimeDurationString(),
+				validators.TimeDuration(),
 			},
 		},
 	}
