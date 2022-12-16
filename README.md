@@ -65,7 +65,7 @@ You must supply `timeouts.Opts` when calling `timeouts.Block()` on a resource. A
 ```go
 import (
     /* ... */
-    "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/resource"
+    "github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 )
 
 func (t *exampleResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -86,7 +86,7 @@ The `timeouts.Block()` call does not accept options on a data source as `read` i
 ```go
 import (
     /* ... */
-    "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/datasource"
+    "github.com/hashicorp/terraform-plugin-framework-timeouts/datasource/timeouts"
 )
 
 func (t exampleDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -131,7 +131,7 @@ You must supply `timeouts.Opts` when calling `timeouts.Attributes()` on a resour
 ```go
 import (
     /* ... */
-    "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/resource"
+    "github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 )
 
 func (t *exampleResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -149,7 +149,7 @@ The `timeouts.Attributes()` call does not accept options on a data source as `re
 ```go
 import (
     /* ... */
-    "github.com/hashicorp/terraform-plugin-framework-timeouts/timeouts/datasource"
+    "github.com/hashicorp/terraform-plugin-framework-timeouts/datasource/timeouts"
 )
 
 func (t exampleDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

@@ -15,12 +15,6 @@ const (
 	attributeNameRead = "read"
 )
 
-// Opts is used as an argument to Block and Attributes to indicate which attributes
-// should be created.
-type Opts struct {
-	Read bool
-}
-
 // Block returns a schema.Block containing attributes for `Read`, which is
 // defined as types.StringType and optional. A validator is used to verify
 // that the value assigned to `Read` can be parsed as time.Duration.
