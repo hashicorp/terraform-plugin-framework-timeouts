@@ -38,7 +38,7 @@ Terraform configuration.
 
 The following illustrates nested block syntax for defining timeouts on a resource and a data source.
 
-```hcl
+```terraform
 resource "timeouts_example" "example" {
   /* ... */
 
@@ -48,7 +48,7 @@ resource "timeouts_example" "example" {
 }
 ```
 
-```hcl
+```terraform
 data "timeouts_example" "example" {
   /* ... */
 
@@ -104,7 +104,7 @@ func (t exampleDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 
 The following illustrates nested attribute syntax for defining timeouts on a resource and a data source.
 
-```hcl
+```terraform
 resource "timeouts_example" "example" {
   /* ... */
 
@@ -114,7 +114,7 @@ resource "timeouts_example" "example" {
 }
 ```
 
-```hcl
+```terraform
 data "timeouts_example" "example" {
   /* ... */
 
@@ -197,8 +197,10 @@ func (r exampleResource) Create(ctx context.Context, req resource.CreateRequest,
     if resp.Diagnostics.HasError() {
         return
     }
-
-    createTimeout, err := data.Timeouts.Create(ctx)
+	
+    // Create() is passed a default timeout to use if no value 
+    // has been supplied in the Terraform configuration.
+    createTimeout, err := data.Timeouts.Create(ctx, 20*time.Minute)
     if err != nil {
         // handle error
     }

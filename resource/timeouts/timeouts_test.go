@@ -179,12 +179,6 @@ func TestTimeoutsValueCreate(t *testing.T) {
 				Object: types.Object{},
 			},
 			expectedTimeout: 20 * time.Minute,
-			expectedDiags: diag.Diagnostics{
-				diag.NewErrorDiagnostic(
-					"Timeout Does Not Exist",
-					`timeout for "create" does not exist`,
-				),
-			},
 		},
 		"create-not-parseable-as-time-duration": {
 			timeoutsValue: timeouts.Value{
@@ -212,13 +206,13 @@ func TestTimeoutsValueCreate(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			gotTimeout, gotErr := test.timeoutsValue.Create(context.Background())
+			gotTimeout, gotErr := test.timeoutsValue.Create(context.Background(), 20*time.Minute)
 
 			if diff := cmp.Diff(gotTimeout, test.expectedTimeout); diff != "" {
 				t.Errorf("unexpected timeout difference: %s", diff)
 			}
 
-			if diff := cmp.Diff(gotErr, test.expectedDiags, equateErrorMessage); diff != "" {
+			if diff := cmp.Diff(gotErr, test.expectedDiags); diff != "" {
 				t.Errorf("unexpected err difference: %s", diff)
 			}
 		})
@@ -253,12 +247,6 @@ func TestTimeoutsValueRead(t *testing.T) {
 				Object: types.Object{},
 			},
 			expectedTimeout: 20 * time.Minute,
-			expectedDiags: diag.Diagnostics{
-				diag.NewErrorDiagnostic(
-					"Timeout Does Not Exist",
-					`timeout for "read" does not exist`,
-				),
-			},
 		},
 		"read-not-parseable-as-time-duration": {
 			timeoutsValue: timeouts.Value{
@@ -286,13 +274,13 @@ func TestTimeoutsValueRead(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			gotTimeout, gotErr := test.timeoutsValue.Read(context.Background())
+			gotTimeout, gotErr := test.timeoutsValue.Read(context.Background(), 20*time.Minute)
 
 			if diff := cmp.Diff(gotTimeout, test.expectedTimeout); diff != "" {
 				t.Errorf("unexpected timeout difference: %s", diff)
 			}
 
-			if diff := cmp.Diff(gotErr, test.expectedDiags, equateErrorMessage); diff != "" {
+			if diff := cmp.Diff(gotErr, test.expectedDiags); diff != "" {
 				t.Errorf("unexpected err difference: %s", diff)
 			}
 		})
@@ -327,12 +315,6 @@ func TestTimeoutsValueUpdate(t *testing.T) {
 				Object: types.Object{},
 			},
 			expectedTimeout: 20 * time.Minute,
-			expectedDiags: diag.Diagnostics{
-				diag.NewErrorDiagnostic(
-					"Timeout Does Not Exist",
-					`timeout for "update" does not exist`,
-				),
-			},
 		},
 		"update-not-parseable-as-time-duration": {
 			timeoutsValue: timeouts.Value{
@@ -360,13 +342,13 @@ func TestTimeoutsValueUpdate(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			gotTimeout, gotErr := test.timeoutsValue.Update(context.Background())
+			gotTimeout, gotErr := test.timeoutsValue.Update(context.Background(), 20*time.Minute)
 
 			if diff := cmp.Diff(gotTimeout, test.expectedTimeout); diff != "" {
 				t.Errorf("unexpected timeout difference: %s", diff)
 			}
 
-			if diff := cmp.Diff(gotErr, test.expectedDiags, equateErrorMessage); diff != "" {
+			if diff := cmp.Diff(gotErr, test.expectedDiags); diff != "" {
 				t.Errorf("unexpected err difference: %s", diff)
 			}
 		})
@@ -401,12 +383,6 @@ func TestTimeoutsValueDelete(t *testing.T) {
 				Object: types.Object{},
 			},
 			expectedTimeout: 20 * time.Minute,
-			expectedDiags: diag.Diagnostics{
-				diag.NewErrorDiagnostic(
-					"Timeout Does Not Exist",
-					`timeout for "delete" does not exist`,
-				),
-			},
 		},
 		"delete-not-parseable-as-time-duration": {
 			timeoutsValue: timeouts.Value{
@@ -434,24 +410,15 @@ func TestTimeoutsValueDelete(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			gotTimeout, gotErr := test.timeoutsValue.Delete(context.Background())
+			gotTimeout, gotErr := test.timeoutsValue.Delete(context.Background(), 20*time.Minute)
 
 			if diff := cmp.Diff(gotTimeout, test.expectedTimeout); diff != "" {
 				t.Errorf("unexpected timeout difference: %s", diff)
 			}
 
-			if diff := cmp.Diff(gotErr, test.expectedDiags, equateErrorMessage); diff != "" {
+			if diff := cmp.Diff(gotErr, test.expectedDiags); diff != "" {
 				t.Errorf("unexpected err difference: %s", diff)
 			}
 		})
 	}
 }
-
-// equateErrorMessage reports errors to be equal if both are nil
-// or both have the same message.
-var equateErrorMessage = cmp.Comparer(func(x, y error) bool {
-	if x == nil || y == nil {
-		return x == nil && y == nil
-	}
-	return x.Error() == y.Error()
-})
