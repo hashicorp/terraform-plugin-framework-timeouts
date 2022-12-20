@@ -7,7 +7,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
@@ -46,15 +46,15 @@ func TestTimeDuration(t *testing.T) {
 	for name, test := range tests {
 		name, test := name, test
 		t.Run(name, func(t *testing.T) {
-			request := tfsdk.ValidateAttributeRequest{
-				AttributePath:           path.Root("test"),
-				AttributePathExpression: path.MatchRoot("test"),
-				AttributeConfig:         test.val,
+			request := validator.StringRequest{
+				Path:           path.Root("test"),
+				PathExpression: path.MatchRoot("test"),
+				ConfigValue:    test.val,
 			}
 
-			response := tfsdk.ValidateAttributeResponse{}
+			response := validator.StringResponse{}
 
-			validators.TimeDuration().Validate(context.Background(), request, &response)
+			validators.TimeDuration().ValidateString(context.Background(), request, &response)
 
 			if diff := cmp.Diff(response.Diagnostics, test.expectedDiagnostics); diff != "" {
 				t.Errorf("unexpected diagnostics difference: %s", diff)
