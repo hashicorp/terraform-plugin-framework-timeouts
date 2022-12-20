@@ -1,9 +1,9 @@
 ```release-note:feature
-Introduced `datasourcetimeouts` package for use with datasource schema
+Introduced `datasource/timeouts` package for use with datasource schema
 ```
 
 ```release-note:feature
-Introduced `resourcetimeouts` package for use with resource schema
+Introduced `resource/timeouts` package for use with resource schema
 ```
 
 ```release-note:breaking-change
