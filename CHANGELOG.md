@@ -1,3 +1,16 @@
+# 0.3.0 (December 21, 2022)
+
+BREAKING CHANGES:
+* all: The `Attributes() tfsdk.Attribute` method has been removed. Use the resource `Attributes() schema.Attribute` or data source `Attributes() schema.Attribute` function instead. ([#18](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/18))
+* all: The `AttributesAll() tfsdk.Attribute` method has been removed. Use the resource `AttributesAll() schema.Attribute` or data source `Attributes() schema.Attribute` function instead. ([#18](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/18))
+* all: The `Block() tfsdk.Block` method has been removed. Use the resource `Block() schema.Block` or data source `Block() schema.Block` function instead. ([#18](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/18))
+* all: The `BlockAll() tfsdk.Block` method has been removed. Use the resource `BlockAll() schema.Block` or data source `Block() schema.Block` function instead. ([#18](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/18))
+
+FEATURES:
+* Introduced `datasource/timeouts` package for use with datasource schema ([#18](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/18))
+* Introduced `resource/timeouts` package for use with resource schema ([#18](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/18))
+
+
 # 0.2.0 (November 21, 2022)
 
 NOTES:
