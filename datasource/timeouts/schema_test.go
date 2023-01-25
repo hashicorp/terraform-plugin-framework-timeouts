@@ -45,6 +45,7 @@ func TestBlock(t *testing.T) {
 	for name, test := range tests {
 		name, test := name, test
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			actual := timeouts.Block(context.Background())
 
 			if diff := cmp.Diff(actual, test.expected); diff != "" {
@@ -86,6 +87,7 @@ func TestAttributes(t *testing.T) {
 	for name, test := range tests {
 		name, test := name, test
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			actual := timeouts.Attributes(context.Background())
 
 			if diff := cmp.Diff(actual, test.expected); diff != "" {
