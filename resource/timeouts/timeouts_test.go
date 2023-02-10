@@ -180,6 +180,32 @@ func TestTimeoutsValueCreate(t *testing.T) {
 			},
 			expectedTimeout: 20 * time.Minute,
 		},
+		"create-null": {
+			timeoutsValue: timeouts.Value{
+				Object: types.ObjectValueMust(
+					map[string]attr.Type{
+						"create": types.StringType,
+					},
+					map[string]attr.Value{
+						"create": types.StringNull(),
+					},
+				),
+			},
+			expectedTimeout: 20 * time.Minute,
+		},
+		"create-unknown": {
+			timeoutsValue: timeouts.Value{
+				Object: types.ObjectValueMust(
+					map[string]attr.Type{
+						"create": types.StringType,
+					},
+					map[string]attr.Value{
+						"create": types.StringUnknown(),
+					},
+				),
+			},
+			expectedTimeout: 20 * time.Minute,
+		},
 		"create-not-parseable-as-time-duration": {
 			timeoutsValue: timeouts.Value{
 				Object: types.ObjectValueMust(
@@ -245,6 +271,32 @@ func TestTimeoutsValueRead(t *testing.T) {
 		"read-not-set": {
 			timeoutsValue: timeouts.Value{
 				Object: types.Object{},
+			},
+			expectedTimeout: 20 * time.Minute,
+		},
+		"read-null": {
+			timeoutsValue: timeouts.Value{
+				Object: types.ObjectValueMust(
+					map[string]attr.Type{
+						"read": types.StringType,
+					},
+					map[string]attr.Value{
+						"read": types.StringNull(),
+					},
+				),
+			},
+			expectedTimeout: 20 * time.Minute,
+		},
+		"read-unknown": {
+			timeoutsValue: timeouts.Value{
+				Object: types.ObjectValueMust(
+					map[string]attr.Type{
+						"read": types.StringType,
+					},
+					map[string]attr.Value{
+						"read": types.StringUnknown(),
+					},
+				),
 			},
 			expectedTimeout: 20 * time.Minute,
 		},
@@ -316,6 +368,32 @@ func TestTimeoutsValueUpdate(t *testing.T) {
 			},
 			expectedTimeout: 20 * time.Minute,
 		},
+		"update-null": {
+			timeoutsValue: timeouts.Value{
+				Object: types.ObjectValueMust(
+					map[string]attr.Type{
+						"update": types.StringType,
+					},
+					map[string]attr.Value{
+						"update": types.StringNull(),
+					},
+				),
+			},
+			expectedTimeout: 20 * time.Minute,
+		},
+		"update-unknown": {
+			timeoutsValue: timeouts.Value{
+				Object: types.ObjectValueMust(
+					map[string]attr.Type{
+						"update": types.StringType,
+					},
+					map[string]attr.Value{
+						"update": types.StringUnknown(),
+					},
+				),
+			},
+			expectedTimeout: 20 * time.Minute,
+		},
 		"update-not-parseable-as-time-duration": {
 			timeoutsValue: timeouts.Value{
 				Object: types.ObjectValueMust(
@@ -381,6 +459,32 @@ func TestTimeoutsValueDelete(t *testing.T) {
 		"delete-not-set": {
 			timeoutsValue: timeouts.Value{
 				Object: types.Object{},
+			},
+			expectedTimeout: 20 * time.Minute,
+		},
+		"delete-null": {
+			timeoutsValue: timeouts.Value{
+				Object: types.ObjectValueMust(
+					map[string]attr.Type{
+						"delete": types.StringType,
+					},
+					map[string]attr.Value{
+						"delete": types.StringNull(),
+					},
+				),
+			},
+			expectedTimeout: 20 * time.Minute,
+		},
+		"delete-unknown": {
+			timeoutsValue: timeouts.Value{
+				Object: types.ObjectValueMust(
+					map[string]attr.Type{
+						"delete": types.StringType,
+					},
+					map[string]attr.Value{
+						"delete": types.StringUnknown(),
+					},
+				),
 			},
 			expectedTimeout: 20 * time.Minute,
 		},
