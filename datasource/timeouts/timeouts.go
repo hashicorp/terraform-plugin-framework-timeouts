@@ -89,6 +89,12 @@ func (t Value) getTimeout(ctx context.Context, timeoutName string, defaultTimeou
 		return defaultTimeout, diags
 	}
 
+	if value.IsNull() || value.IsUnknown() {
+		tflog.Info(ctx, timeoutName+" timeout configuration is null or unknown, using provided default")
+
+		return defaultTimeout, diags
+	}
+
 	// No type assertion check is required as the schema guarantees that the object attributes
 	// are types.String.
 	timeout, err := time.ParseDuration(value.(types.String).ValueString())

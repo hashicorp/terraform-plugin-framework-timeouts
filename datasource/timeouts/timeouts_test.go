@@ -165,6 +165,32 @@ func TestTimeoutsValueRead(t *testing.T) {
 			},
 			expectedTimeout: 20 * time.Minute,
 		},
+		"read-null": {
+			timeoutsValue: timeouts.Value{
+				Object: types.ObjectValueMust(
+					map[string]attr.Type{
+						"read": types.StringType,
+					},
+					map[string]attr.Value{
+						"read": types.StringNull(),
+					},
+				),
+			},
+			expectedTimeout: 20 * time.Minute,
+		},
+		"read-unknown": {
+			timeoutsValue: timeouts.Value{
+				Object: types.ObjectValueMust(
+					map[string]attr.Type{
+						"read": types.StringType,
+					},
+					map[string]attr.Value{
+						"read": types.StringUnknown(),
+					},
+				),
+			},
+			expectedTimeout: 20 * time.Minute,
+		},
 		"read-not-parseable-as-time-duration": {
 			timeoutsValue: timeouts.Value{
 				Object: types.ObjectValueMust(

@@ -1,0 +1,5 @@
+kind: BUG FIXES
+body: 'resource/timeouts: Use default for null and unknown ([#35](https://github.com/hashicorp/terraform-plugin-framework-timeouts/pull/35)).'
+time: 2023-02-10T17:58:52.979389154+01:00
+custom:
+  Issue: "35"
