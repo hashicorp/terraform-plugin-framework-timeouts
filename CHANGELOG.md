@@ -1,3 +1,10 @@
+## 0.3.1 (February 13, 2023)
+
+BUG FIXES:
+
+* datasource/timeouts: Use default for null and unknown ([#35](https://github.com/hashicorp/terraform-plugin-framework-timeouts/pull/35)). ([#35](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/35))
+* resource/timeouts: Use default for null and unknown ([#35](https://github.com/hashicorp/terraform-plugin-framework-timeouts/pull/35)). ([#35](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/35))
+
 # 0.3.0 (December 21, 2022)
 
 BREAKING CHANGES:
