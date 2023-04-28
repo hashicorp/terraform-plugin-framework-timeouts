@@ -1,0 +1,5 @@
+kind: ENHANCEMENTS
+body: 'resource/timeouts: Add description for create, delete, read and update'
+time: 2023-04-28T17:44:12.860337+01:00
+custom:
+  Issue: "51"
