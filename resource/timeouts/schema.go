@@ -87,6 +87,9 @@ func AttributesAll(ctx context.Context) schema.Attribute {
 func attributesMap(opts Opts) map[string]schema.Attribute {
 	attributes := map[string]schema.Attribute{}
 	attribute := schema.StringAttribute{
+		Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+			`consisting of decimal numbers, each with optional fraction and a unit suffix, such as ` +
+			`"300ms", or "2h45m". Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".`,
 		Optional: true,
 		Validators: []validator.String{
 			validators.TimeDuration(),
