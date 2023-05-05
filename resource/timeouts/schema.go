@@ -85,11 +85,11 @@ func AttributesAll(ctx context.Context) schema.Attribute {
 }
 
 func attributesMap(opts Opts) map[string]schema.Attribute {
+	description := `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+		`consisting of decimal numbers, each with optional fraction and a unit suffix, such as ` +
+		`"30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).`
 	attributes := map[string]schema.Attribute{}
 	attribute := schema.StringAttribute{
-		Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
-			`consisting of decimal numbers, each with optional fraction and a unit suffix, such as ` +
-			`"30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).`,
 		Optional: true,
 		Validators: []validator.String{
 			validators.TimeDuration(),
@@ -97,18 +97,24 @@ func attributesMap(opts Opts) map[string]schema.Attribute {
 	}
 
 	if opts.Create {
+		attribute.Description = description
 		attributes[attributeNameCreate] = attribute
 	}
 
 	if opts.Read {
+		attribute.Description = description + ` Read operations occur during any refresh or planning operation ` +
+			`when refresh is enabled.`
 		attributes[attributeNameRead] = attribute
 	}
 
 	if opts.Update {
+		attribute.Description = description
 		attributes[attributeNameUpdate] = attribute
 	}
 
 	if opts.Delete {
+		attribute.Description = description + ` Setting a timeout for a Delete operation is only applicable if ` +
+			`changes are saved into state before the destroy operation occurs.`
 		attributes[attributeNameDelete] = attribute
 	}
 

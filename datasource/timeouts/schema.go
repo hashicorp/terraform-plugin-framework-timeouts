@@ -50,7 +50,8 @@ func attributesMap() map[string]schema.Attribute {
 		attributeNameRead: schema.StringAttribute{
 			Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
 				`consisting of decimal numbers, each with optional fraction and a unit suffix, such as ` +
-				`"30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).`,
+				`"30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours). ` +
+				`Read operations occur during any refresh or planning operation when refresh is enabled.`,
 			Optional: true,
 			Validators: []validator.String{
 				validators.TimeDuration(),
