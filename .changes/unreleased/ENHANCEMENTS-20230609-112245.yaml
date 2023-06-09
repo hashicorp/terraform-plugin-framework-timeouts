@@ -1,0 +1,6 @@
+kind: ENHANCEMENTS
+body: 'resource/timeouts: Add opts for `CreateDescription`, `ReadDescription`, UpdateDescription`
+  and `DeleteDescription` to allow overriding of default description'
+time: 2023-06-09T11:22:45.08138+01:00
+custom:
+  Issue: "51"
