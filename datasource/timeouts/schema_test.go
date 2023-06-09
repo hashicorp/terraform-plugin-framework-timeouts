@@ -14,6 +14,72 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
 )
 
+func TestBlockWithOpts(t *testing.T) {
+	t.Parallel()
+
+	type testCase struct {
+		opts     timeouts.Opts
+		expected schema.Block
+	}
+	tests := map[string]testCase{
+		"empty-opts": {
+			opts: timeouts.Opts{},
+			expected: schema.SingleNestedBlock{
+				CustomType: timeouts.Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"read": types.StringType,
+						},
+					},
+				},
+				Attributes: map[string]schema.Attribute{
+					"read": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+				},
+			},
+		},
+		"read-opts-description": {
+			opts: timeouts.Opts{
+				ReadDescription: "read description",
+			},
+			expected: schema.SingleNestedBlock{
+				CustomType: timeouts.Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"read": types.StringType,
+						},
+					},
+				},
+				Attributes: map[string]schema.Attribute{
+					"read": schema.StringAttribute{
+						Optional:    true,
+						Description: "read description",
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for name, test := range tests {
+		name, test := name, test
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			actual := timeouts.BlockWithOpts(context.Background(), test.opts)
+
+			if diff := cmp.Diff(actual, test.expected); diff != "" {
+				t.Errorf("unexpected block difference: %s", diff)
+			}
+		})
+	}
+}
+
 func TestBlock(t *testing.T) {
 	t.Parallel()
 
@@ -47,6 +113,74 @@ func TestBlock(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			actual := timeouts.Block(context.Background())
+
+			if diff := cmp.Diff(actual, test.expected); diff != "" {
+				t.Errorf("unexpected block difference: %s", diff)
+			}
+		})
+	}
+}
+
+func TestAttributesWithOpts(t *testing.T) {
+	t.Parallel()
+
+	type testCase struct {
+		opts     timeouts.Opts
+		expected schema.Attribute
+	}
+	tests := map[string]testCase{
+		"empty-opts": {
+			opts: timeouts.Opts{},
+			expected: schema.SingleNestedAttribute{
+				Attributes: map[string]schema.Attribute{
+					"read": schema.StringAttribute{
+						Optional: true,
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+				},
+				CustomType: timeouts.Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"read": types.StringType,
+						},
+					},
+				},
+				Optional: true,
+			},
+		},
+		"read-opts-description": {
+			opts: timeouts.Opts{
+				ReadDescription: "read description",
+			},
+			expected: schema.SingleNestedAttribute{
+				Attributes: map[string]schema.Attribute{
+					"read": schema.StringAttribute{
+						Optional:    true,
+						Description: "read description",
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+				},
+				CustomType: timeouts.Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"read": types.StringType,
+						},
+					},
+				},
+				Optional: true,
+			},
+		},
+	}
+
+	for name, test := range tests {
+		name, test := name, test
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			actual := timeouts.AttributesWithOpts(context.Background(), test.opts)
 
 			if diff := cmp.Diff(actual, test.expected); diff != "" {
 				t.Errorf("unexpected block difference: %s", diff)

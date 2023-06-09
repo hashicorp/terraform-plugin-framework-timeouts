@@ -85,6 +85,64 @@ func TestBlock(t *testing.T) {
 				},
 			},
 		},
+		"create-opts-description": {
+			opts: timeouts.Opts{
+				Create:            true,
+				CreateDescription: "create description",
+			},
+			expected: schema.SingleNestedBlock{
+				CustomType: timeouts.Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"create": types.StringType,
+						},
+					},
+				},
+				Attributes: map[string]schema.Attribute{
+					"create": schema.StringAttribute{
+						Optional:    true,
+						Description: "create description",
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+				},
+			},
+		},
+		"create-update-opts-description": {
+			opts: timeouts.Opts{
+				Create:            true,
+				CreateDescription: "create description",
+				Update:            true,
+				UpdateDescription: "update description",
+			},
+			expected: schema.SingleNestedBlock{
+				CustomType: timeouts.Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"create": types.StringType,
+							"update": types.StringType,
+						},
+					},
+				},
+				Attributes: map[string]schema.Attribute{
+					"create": schema.StringAttribute{
+						Optional:    true,
+						Description: "create description",
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+					"update": schema.StringAttribute{
+						Optional:    true,
+						Description: "update description",
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+				},
+			},
+		},
 	}
 
 	for name, test := range tests {
@@ -207,6 +265,66 @@ func TestAttributes(t *testing.T) {
 					},
 					"update": schema.StringAttribute{
 						Optional: true,
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+				},
+				CustomType: timeouts.Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"create": types.StringType,
+							"update": types.StringType,
+						},
+					},
+				},
+				Optional: true,
+			},
+		},
+		"create-opts-description": {
+			opts: timeouts.Opts{
+				Create:            true,
+				CreateDescription: "create description",
+			},
+			expected: schema.SingleNestedAttribute{
+				Attributes: map[string]schema.Attribute{
+					"create": schema.StringAttribute{
+						Optional:    true,
+						Description: "create description",
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+				},
+				CustomType: timeouts.Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"create": types.StringType,
+						},
+					},
+				},
+				Optional: true,
+			},
+		},
+		"create-update-opts-description": {
+			opts: timeouts.Opts{
+				Create:            true,
+				CreateDescription: "create description",
+				Update:            true,
+				UpdateDescription: "update description",
+			},
+			expected: schema.SingleNestedAttribute{
+				Attributes: map[string]schema.Attribute{
+					"create": schema.StringAttribute{
+						Optional:    true,
+						Description: "create description",
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+					"update": schema.StringAttribute{
+						Optional:    true,
+						Description: "update description",
 						Validators: []validator.String{
 							validators.TimeDuration(),
 						},
