@@ -89,8 +89,8 @@ func attributesMap(opts Opts) map[string]schema.Attribute {
 	attribute := schema.StringAttribute{
 		Optional: true,
 		Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
-			`consisting of numbers and unit suffixes, such as ` +
-			`"30s" or "2h45m". Valid time units are "s" (seconds), "m" (minutes), "h" (hours).`,
+			`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+			`"s" (seconds), "m" (minutes), "h" (hours).`,
 		Validators: []validator.String{
 			validators.TimeDuration(),
 		},
