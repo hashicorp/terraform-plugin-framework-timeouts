@@ -51,6 +51,9 @@ func TestBlock(t *testing.T) {
 				Attributes: map[string]schema.Attribute{
 					"create": schema.StringAttribute{
 						Optional: true,
+						Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+							`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+							`"s" (seconds), "m" (minutes), "h" (hours).`,
 						Validators: []validator.String{
 							validators.TimeDuration(),
 						},
@@ -75,12 +78,76 @@ func TestBlock(t *testing.T) {
 				Attributes: map[string]schema.Attribute{
 					"create": schema.StringAttribute{
 						Optional: true,
+						Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+							`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+							`"s" (seconds), "m" (minutes), "h" (hours).`,
 						Validators: []validator.String{
 							validators.TimeDuration(),
 						},
 					},
 					"update": schema.StringAttribute{
 						Optional: true,
+						Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+							`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+							`"s" (seconds), "m" (minutes), "h" (hours).`,
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+				},
+			},
+		},
+		"create-opts-description": {
+			opts: timeouts.Opts{
+				Create:            true,
+				CreateDescription: "create description",
+			},
+			expected: schema.SingleNestedBlock{
+				CustomType: timeouts.Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"create": types.StringType,
+						},
+					},
+				},
+				Attributes: map[string]schema.Attribute{
+					"create": schema.StringAttribute{
+						Optional:    true,
+						Description: "create description",
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+				},
+			},
+		},
+		"create-update-opts-description": {
+			opts: timeouts.Opts{
+				Create:            true,
+				CreateDescription: "create description",
+				Update:            true,
+				UpdateDescription: "update description",
+			},
+			expected: schema.SingleNestedBlock{
+				CustomType: timeouts.Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"create": types.StringType,
+							"update": types.StringType,
+						},
+					},
+				},
+				Attributes: map[string]schema.Attribute{
+					"create": schema.StringAttribute{
+						Optional:    true,
+						Description: "create description",
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+					"update": schema.StringAttribute{
+						Optional:    true,
+						Description: "update description",
 						Validators: []validator.String{
 							validators.TimeDuration(),
 						},
@@ -122,24 +189,38 @@ func TestBlockAll(t *testing.T) {
 		Attributes: map[string]schema.Attribute{
 			"create": schema.StringAttribute{
 				Optional: true,
+				Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+					`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+					`"s" (seconds), "m" (minutes), "h" (hours).`,
 				Validators: []validator.String{
 					validators.TimeDuration(),
 				},
 			},
 			"read": schema.StringAttribute{
 				Optional: true,
+				Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+					`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+					`"s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or ` +
+					`planning operation when refresh is enabled.`,
 				Validators: []validator.String{
 					validators.TimeDuration(),
 				},
 			},
 			"update": schema.StringAttribute{
 				Optional: true,
+				Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+					`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+					`"s" (seconds), "m" (minutes), "h" (hours).`,
 				Validators: []validator.String{
 					validators.TimeDuration(),
 				},
 			},
 			"delete": schema.StringAttribute{
 				Optional: true,
+				Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+					`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+					`"s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is ` +
+					`only applicable if changes are saved into state before the destroy operation occurs.`,
 				Validators: []validator.String{
 					validators.TimeDuration(),
 				},
@@ -180,6 +261,9 @@ func TestAttributes(t *testing.T) {
 				Attributes: map[string]schema.Attribute{
 					"create": schema.StringAttribute{
 						Optional: true,
+						Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+							`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+							`"s" (seconds), "m" (minutes), "h" (hours).`,
 						Validators: []validator.String{
 							validators.TimeDuration(),
 						},
@@ -204,12 +288,78 @@ func TestAttributes(t *testing.T) {
 				Attributes: map[string]schema.Attribute{
 					"create": schema.StringAttribute{
 						Optional: true,
+						Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+							`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+							`"s" (seconds), "m" (minutes), "h" (hours).`,
 						Validators: []validator.String{
 							validators.TimeDuration(),
 						},
 					},
 					"update": schema.StringAttribute{
 						Optional: true,
+						Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+							`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+							`"s" (seconds), "m" (minutes), "h" (hours).`,
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+				},
+				CustomType: timeouts.Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"create": types.StringType,
+							"update": types.StringType,
+						},
+					},
+				},
+				Optional: true,
+			},
+		},
+		"create-opts-description": {
+			opts: timeouts.Opts{
+				Create:            true,
+				CreateDescription: "create description",
+			},
+			expected: schema.SingleNestedAttribute{
+				Attributes: map[string]schema.Attribute{
+					"create": schema.StringAttribute{
+						Optional:    true,
+						Description: "create description",
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+				},
+				CustomType: timeouts.Type{
+					ObjectType: types.ObjectType{
+						AttrTypes: map[string]attr.Type{
+							"create": types.StringType,
+						},
+					},
+				},
+				Optional: true,
+			},
+		},
+		"create-update-opts-description": {
+			opts: timeouts.Opts{
+				Create:            true,
+				CreateDescription: "create description",
+				Update:            true,
+				UpdateDescription: "update description",
+			},
+			expected: schema.SingleNestedAttribute{
+				Attributes: map[string]schema.Attribute{
+					"create": schema.StringAttribute{
+						Optional:    true,
+						Description: "create description",
+						Validators: []validator.String{
+							validators.TimeDuration(),
+						},
+					},
+					"update": schema.StringAttribute{
+						Optional:    true,
+						Description: "update description",
 						Validators: []validator.String{
 							validators.TimeDuration(),
 						},
@@ -250,24 +400,38 @@ func TestAttributesAll(t *testing.T) {
 		Attributes: map[string]schema.Attribute{
 			"create": schema.StringAttribute{
 				Optional: true,
+				Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+					`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+					`"s" (seconds), "m" (minutes), "h" (hours).`,
 				Validators: []validator.String{
 					validators.TimeDuration(),
 				},
 			},
 			"read": schema.StringAttribute{
 				Optional: true,
+				Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+					`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+					`"s" (seconds), "m" (minutes), "h" (hours). Read operations occur during any refresh or ` +
+					`planning operation when refresh is enabled.`,
 				Validators: []validator.String{
 					validators.TimeDuration(),
 				},
 			},
 			"update": schema.StringAttribute{
 				Optional: true,
+				Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+					`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+					`"s" (seconds), "m" (minutes), "h" (hours).`,
 				Validators: []validator.String{
 					validators.TimeDuration(),
 				},
 			},
 			"delete": schema.StringAttribute{
 				Optional: true,
+				Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+					`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+					`"s" (seconds), "m" (minutes), "h" (hours). Setting a timeout for a Delete operation is ` +
+					`only applicable if changes are saved into state before the destroy operation occurs.`,
 				Validators: []validator.String{
 					validators.TimeDuration(),
 				},

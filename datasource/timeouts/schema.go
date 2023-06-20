@@ -18,12 +18,19 @@ const (
 	attributeNameRead = "read"
 )
 
-// Block returns a schema.Block containing attributes for `Read`, which is
+// Opts is used as an argument to BlockWithOpts and AttributesWithOpts to indicate
+// whether supplied descriptions should override default descriptions.
+type Opts struct {
+	ReadDescription string
+}
+
+// BlockWithOpts returns a schema.Block containing attributes for `Read`, which is
 // defined as types.StringType and optional. A validator is used to verify
-// that the value assigned to `Read` can be parsed as time.Duration.
-func Block(ctx context.Context) schema.Block {
+// that the value assigned to `Read` can be parsed as time.Duration. The supplied
+// Opts are used to override defaults.
+func BlockWithOpts(ctx context.Context, opts Opts) schema.Block {
 	return schema.SingleNestedBlock{
-		Attributes: attributesMap(),
+		Attributes: attributesMap(opts),
 		CustomType: Type{
 			ObjectType: types.ObjectType{
 				AttrTypes: attrTypesMap(),
@@ -32,13 +39,27 @@ func Block(ctx context.Context) schema.Block {
 	}
 }
 
-// Attributes returns a schema.SingleNestedAttribute which contains an
+// Block returns a schema.Block containing attributes for `Read`, which is
+// defined as types.StringType and optional. A validator is used to verify
+// that the value assigned to `Read` can be parsed as time.Duration.
+func Block(ctx context.Context) schema.Block {
+	return schema.SingleNestedBlock{
+		Attributes: attributesMap(Opts{}),
+		CustomType: Type{
+			ObjectType: types.ObjectType{
+				AttrTypes: attrTypesMap(),
+			},
+		},
+	}
+}
+
+// AttributesWithOpts returns a schema.SingleNestedAttribute which contains an
 // attribute for `Read`, which is defined as types.StringType and optional.
 // A validator is used to verify that the value assigned to an attribute
-// can be parsed as time.Duration.
-func Attributes(ctx context.Context) schema.Attribute {
+// can be parsed as time.Duration. The supplied Opts are used to override defaults.
+func AttributesWithOpts(ctx context.Context, opts Opts) schema.Attribute {
 	return schema.SingleNestedAttribute{
-		Attributes: attributesMap(),
+		Attributes: attributesMap(opts),
 		CustomType: Type{
 			ObjectType: types.ObjectType{
 				AttrTypes: attrTypesMap(),
@@ -48,14 +69,39 @@ func Attributes(ctx context.Context) schema.Attribute {
 	}
 }
 
-func attributesMap() map[string]schema.Attribute {
-	return map[string]schema.Attribute{
-		attributeNameRead: schema.StringAttribute{
-			Optional: true,
-			Validators: []validator.String{
-				validators.TimeDuration(),
+// Attributes returns a schema.SingleNestedAttribute which contains an
+// attribute for `Read`, which is defined as types.StringType and optional.
+// A validator is used to verify that the value assigned to an attribute
+// can be parsed as time.Duration.
+func Attributes(ctx context.Context) schema.Attribute {
+	return schema.SingleNestedAttribute{
+		Attributes: attributesMap(Opts{}),
+		CustomType: Type{
+			ObjectType: types.ObjectType{
+				AttrTypes: attrTypesMap(),
 			},
 		},
+		Optional: true,
+	}
+}
+
+func attributesMap(opts Opts) map[string]schema.Attribute {
+	attribute := schema.StringAttribute{
+		Optional: true,
+		Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+			`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+			`"s" (seconds), "m" (minutes), "h" (hours).`,
+		Validators: []validator.String{
+			validators.TimeDuration(),
+		},
+	}
+
+	if opts.ReadDescription != "" {
+		attribute.Description = opts.ReadDescription
+	}
+
+	return map[string]schema.Attribute{
+		attributeNameRead: attribute,
 	}
 }
 

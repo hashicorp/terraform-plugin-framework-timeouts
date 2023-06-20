@@ -60,7 +60,9 @@ data "timeouts_example" "example" {
 
 Use this module to mutate the `schema.Schema`:
 
-You must supply `timeouts.Opts` when calling `timeouts.Block()` on a resource. Alternatively, `timeouts.BlockAll()` will generate attributes for `create`, `read`, `update` and `delete`.
+You must supply `timeouts.Opts` when calling `timeouts.Block()` on a resource. The supplied `timeouts.Opts` allows specifying which timeouts to create and whether to override the default description for the timeout.
+
+Alternatively, `timeouts.BlockAll()` will generate attributes for `create`, `read`, `update` and `delete`.
 
 ```go
 import (
@@ -82,6 +84,8 @@ func (t *exampleResource) Schema(ctx context.Context, req resource.SchemaRequest
 ```
 
 The `timeouts.Block()` call does not accept options on a data source as `read` is the only option.
+
+However, the `timeouts.BlockWithOpts()` function is available for overriding the default description.
 
 ```go
 import (
@@ -126,7 +130,9 @@ data "timeouts_example" "example" {
 
 Use this module to mutate the `schema.Schema` as follows:
 
-You must supply `timeouts.Opts` when calling `timeouts.Attributes()` on a resource.
+You must supply `timeouts.Opts` when calling `timeouts.Attributes()` on a resource. The supplied `timeouts.Opts` allows specifying which timeouts to create and whether to override the default description for the timeout.
+
+Alternatively, `timeouts.AttributesAll()` will generate attributes for `create`, `read`, `update` and `delete`.
 
 ```go
 import (
@@ -144,7 +150,9 @@ func (t *exampleResource) Schema(ctx context.Context, req resource.SchemaRequest
         },
 ```
 
-The `timeouts.Attributes()` call does not accept options on a data source as `read` is the only option.
+The `timeouts.Attributes()` call does not accept options on a data source as `read` is the only option. 
+
+However, the `timeouts.AttributesWithOpts()` function is available for overriding the default description.
 
 ```go
 import (

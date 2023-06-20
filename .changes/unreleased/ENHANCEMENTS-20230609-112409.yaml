@@ -1,0 +1,6 @@
+kind: ENHANCEMENTS
+body: 'datasource/timeouts: Add `BlockWithOpts()` and `AttributesWithOpts()` functions
+  to allow overriding of default description'
+time: 2023-06-09T11:24:09.988096+01:00
+custom:
+  Issue: "51"

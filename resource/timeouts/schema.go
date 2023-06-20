@@ -22,12 +22,17 @@ const (
 )
 
 // Opts is used as an argument to Block and Attributes to indicate which attributes
-// should be created.
+// should be created and whether supplied descriptions should override default
+// descriptions.
 type Opts struct {
-	Create bool
-	Read   bool
-	Update bool
-	Delete bool
+	Create            bool
+	Read              bool
+	Update            bool
+	Delete            bool
+	CreateDescription string
+	ReadDescription   string
+	UpdateDescription string
+	DeleteDescription string
 }
 
 // Block returns a schema.Block containing attributes for each of the fields
@@ -88,6 +93,9 @@ func AttributesAll(ctx context.Context) schema.Attribute {
 }
 
 func attributesMap(opts Opts) map[string]schema.Attribute {
+	description := `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+		`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+		`"s" (seconds), "m" (minutes), "h" (hours).`
 	attributes := map[string]schema.Attribute{}
 	attribute := schema.StringAttribute{
 		Optional: true,
@@ -97,18 +105,44 @@ func attributesMap(opts Opts) map[string]schema.Attribute {
 	}
 
 	if opts.Create {
+		attribute.Description = description
+
+		if opts.CreateDescription != "" {
+			attribute.Description = opts.CreateDescription
+		}
+
 		attributes[attributeNameCreate] = attribute
 	}
 
 	if opts.Read {
+		attribute.Description = description + ` Read operations occur during any refresh or planning operation ` +
+			`when refresh is enabled.`
+
+		if opts.ReadDescription != "" {
+			attribute.Description = opts.ReadDescription
+		}
+
 		attributes[attributeNameRead] = attribute
 	}
 
 	if opts.Update {
+		attribute.Description = description
+
+		if opts.UpdateDescription != "" {
+			attribute.Description = opts.UpdateDescription
+		}
+
 		attributes[attributeNameUpdate] = attribute
 	}
 
 	if opts.Delete {
+		attribute.Description = description + ` Setting a timeout for a Delete operation is only applicable if ` +
+			`changes are saved into state before the destroy operation occurs.`
+
+		if opts.DeleteDescription != "" {
+			attribute.Description = opts.DeleteDescription
+		}
+
 		attributes[attributeNameDelete] = attribute
 	}
 
