@@ -11,13 +11,33 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
+var (
+	_ basetypes.ObjectTypable  = Type{}
+	_ basetypes.ObjectValuable = Value{}
+)
+
 // Type is an attribute type that represents timeouts.
 type Type struct {
-	types.ObjectType
+	basetypes.ObjectType
+}
+
+// String returns a human-readable representation of the type.
+func (t Type) String() string {
+	return "timeouts.Type"
+}
+
+// ValueFromObject returns a Value given a basetypes.ObjectValue.
+func (t Type) ValueFromObject(_ context.Context, in basetypes.ObjectValue) (basetypes.ObjectValuable, diag.Diagnostics) {
+	value := Value{
+		Object: in,
+	}
+
+	return value, nil
 }
 
 // ValueFromTerraform returns a Value given a tftypes.Value.
@@ -39,7 +59,13 @@ func (t Type) ValueFromTerraform(ctx context.Context, in tftypes.Value) (attr.Va
 	}, err
 }
 
-// Equal returns true if `candidate` is also an Type and has the same
+// ValueType returns the associated Value type for debugging.
+func (t Type) ValueType(context.Context) attr.Value {
+	// It does not need to be a fully valid implementation of the type.
+	return Value{}
+}
+
+// Equal returns true if `candidate` is also a Type and has the same
 // AttributeTypes.
 func (t Type) Equal(candidate attr.Type) bool {
 	other, ok := candidate.(Type)
@@ -65,6 +91,11 @@ func (t Value) Equal(c attr.Value) bool {
 	}
 
 	return t.Object.Equal(other.Object)
+}
+
+// ToObjectValue returns the underlying ObjectValue.
+func (v Value) ToObjectValue(_ context.Context) (basetypes.ObjectValue, diag.Diagnostics) {
+	return v.Object, nil
 }
 
 // Type returns a Type with the same attribute types as `t`.
