@@ -1,3 +1,10 @@
+## 0.4.1 (July 07, 2023)
+
+BUG FIXES:
+
+* datasource/timeouts: Prevented `Value Conversion Error` with terraform-plugin-framework 1.3.0 and later ([#72](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/72))
+* resource/timeouts: Prevented `Value Conversion Error` with terraform-plugin-framework 1.3.0 and later ([#72](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/72))
+
 ## 0.4.0 (June 21, 2023)
 
 NOTES:
