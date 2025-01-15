@@ -1,5 +1,0 @@
-kind: FEATURES
-body: 'ephemeral/timeouts: Adds functions and types for ephemeral resource timeouts'
-time: 2025-01-13T19:49:03.365811628-06:00
-custom:
-    Issue: "157"

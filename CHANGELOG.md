@@ -1,3 +1,13 @@
+## 0.5.0 (January 15, 2025)
+
+NOTES:
+
+* all: This Go module has been updated to Go 1.22 per the [Go support policy](https://go.dev/doc/devel/release#policy). It is recommended to review the [Go 1.22 release notes](https://go.dev/doc/go1.22) before upgrading. Any consumers building on earlier Go versions may experience errors. ([#143](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/143))
+
+FEATURES:
+
+* ephemeral/timeouts: Adds functions and types for ephemeral resource timeouts ([#157](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/157))
+
 ## 0.4.1 (July 07, 2023)
 
 BUG FIXES:
