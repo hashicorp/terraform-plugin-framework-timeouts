@@ -74,7 +74,7 @@ func TestBlockWithOpts(t *testing.T) {
 	}
 
 	for name, test := range tests {
-		name, test := name, test
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			actual := timeouts.BlockWithOpts(context.Background(), test.opts)
@@ -118,7 +118,7 @@ func TestBlock(t *testing.T) {
 	}
 
 	for name, test := range tests {
-		name, test := name, test
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			actual := timeouts.Block(context.Background())
@@ -189,7 +189,7 @@ func TestAttributesWithOpts(t *testing.T) {
 	}
 
 	for name, test := range tests {
-		name, test := name, test
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			actual := timeouts.AttributesWithOpts(context.Background(), test.opts)
@@ -234,7 +234,7 @@ func TestAttributes(t *testing.T) {
 	}
 
 	for name, test := range tests {
-		name, test := name, test
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			actual := timeouts.Attributes(context.Background())

@@ -71,7 +71,7 @@ func TestTimeoutsTypeValueFromTerraform(t *testing.T) {
 	}
 
 	for name, test := range tests {
-		name, test := name, test
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
@@ -142,7 +142,7 @@ func TestTimeoutsTypeEqual(t *testing.T) {
 		},
 	}
 	for name, test := range tests {
-		name, test := name, test
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
@@ -231,7 +231,7 @@ func TestTimeoutsValueCreate(t *testing.T) {
 	}
 
 	for name, test := range tests {
-		name, test := name, test
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
@@ -325,7 +325,7 @@ func TestTimeoutsValueRead(t *testing.T) {
 	}
 
 	for name, test := range tests {
-		name, test := name, test
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
@@ -419,7 +419,7 @@ func TestTimeoutsValueUpdate(t *testing.T) {
 	}
 
 	for name, test := range tests {
-		name, test := name, test
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
@@ -513,7 +513,7 @@ func TestTimeoutsValueDelete(t *testing.T) {
 	}
 
 	for name, test := range tests {
-		name, test := name, test
+
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
