@@ -1,3 +1,13 @@
+## 0.6.0 (September 17, 2025)
+
+NOTES:
+
+* all: This Go module has been updated to Go 1.24 per the [Go support policy](https://go.dev/doc/devel/release#policy). It is recommended to review the [Go 1.24 release notes](https://go.dev/doc/go1.24) before upgrading. Any consumers building on earlier Go versions may experience errors. ([#201](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/201))
+
+FEATURES:
+
+* list/timeouts: Adds functions and types for list resource timeouts. ([#197](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/197))
+
 ## 0.5.0 (January 15, 2025)
 
 NOTES:
