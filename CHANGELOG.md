@@ -1,3 +1,9 @@
+## 0.7.0 (October 22, 2025)
+
+FEATURES:
+
+* action/timeouts: Adds functions and types for action timeouts ([#205](https://github.com/hashicorp/terraform-plugin-framework-timeouts/issues/205))
+
 ## 0.6.0 (September 17, 2025)
 
 NOTES:
