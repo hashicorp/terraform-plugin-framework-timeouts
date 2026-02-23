@@ -17,7 +17,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/statestore/timeouts"
 )
 
-
 func TestAttributesWithOpts(t *testing.T) {
 	t.Parallel()
 
