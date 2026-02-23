@@ -1,0 +1,5 @@
+kind: FEATURES
+body: Adds functions and types for statestore timeouts.
+time: 2026-02-23T11:38:50.757069-05:00
+custom:
+    Issue: "222"

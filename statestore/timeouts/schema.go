@@ -1,0 +1,83 @@
+// Copyright IBM Corp. 2022, 2026
+// SPDX-License-Identifier: MPL-2.0
+
+package timeouts
+
+import (
+	"context"
+
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/statestore/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators"
+)
+
+const (
+	attributeNameStateStore = "statestore"
+)
+
+// Opts is used as an argument to BlockWithOpts and AttributesWithOpts to indicate
+// whether supplied descriptions should override default descriptions.
+type Opts struct {
+	StateStoreDescription string
+}
+
+// AttributesWithOpts returns a schema.SingleNestedAttribute which contains an
+// attribute for `Open`, which is defined as types.StringType and optional.
+// A validator is used to verify that the value assigned to an attribute
+// can be parsed as time.Duration. The supplied Opts are used to override defaults.
+func AttributesWithOpts(ctx context.Context, opts Opts) schema.Attribute {
+	return schema.SingleNestedAttribute{
+		Attributes: attributesMap(opts),
+		CustomType: Type{
+			ObjectType: types.ObjectType{
+				AttrTypes: attrTypesMap(),
+			},
+		},
+		Optional: true,
+	}
+}
+
+// Attributes returns a schema.SingleNestedAttribute which contains an
+// attribute for `Open`, which is defined as types.StringType and optional.
+// A validator is used to verify that the value assigned to an attribute
+// can be parsed as time.Duration.
+func Attributes(ctx context.Context) schema.Attribute {
+	return schema.SingleNestedAttribute{
+		Attributes: attributesMap(Opts{}),
+		CustomType: Type{
+			ObjectType: types.ObjectType{
+				AttrTypes: attrTypesMap(),
+			},
+		},
+		Optional: true,
+	}
+}
+
+func attributesMap(opts Opts) map[string]schema.Attribute {
+	attribute := schema.StringAttribute{
+		Optional: true,
+		Description: `A string that can be [parsed as a duration](https://pkg.go.dev/time#ParseDuration) ` +
+			`consisting of numbers and unit suffixes, such as "30s" or "2h45m". Valid time units are ` +
+			`"s" (seconds), "m" (minutes), "h" (hours).`,
+		Validators: []validator.String{
+			validators.TimeDuration(),
+		},
+	}
+
+	if opts.StateStoreDescription != "" {
+		attribute.Description = opts.StateStoreDescription
+	}
+
+	return map[string]schema.Attribute{
+		attributeNameStateStore: attribute,
+	}
+}
+
+func attrTypesMap() map[string]attr.Type {
+	return map[string]attr.Type{
+		attributeNameStateStore: types.StringType,
+	}
+}
