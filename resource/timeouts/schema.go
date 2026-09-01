@@ -25,14 +25,16 @@ const (
 // should be created and whether supplied descriptions should override default
 // descriptions.
 type Opts struct {
-	Create            bool
-	Read              bool
-	Update            bool
-	Delete            bool
-	CreateDescription string
-	ReadDescription   string
-	UpdateDescription string
-	DeleteDescription string
+	MarkdownDescription string
+	Description         string
+	Create              bool
+	Read                bool
+	Update              bool
+	Delete              bool
+	CreateDescription   string
+	ReadDescription     string
+	UpdateDescription   string
+	DeleteDescription   string
 }
 
 // Block returns a schema.Block containing attributes for each of the fields
@@ -41,7 +43,9 @@ type Opts struct {
 // attribute can be parsed as time.Duration.
 func Block(ctx context.Context, opts Opts) schema.Block {
 	return schema.SingleNestedBlock{
-		Attributes: attributesMap(opts),
+		MarkdownDescription: opts.MarkdownDescription,
+		Description:         opts.Description,
+		Attributes:          attributesMap(opts),
 		CustomType: Type{
 			ObjectType: types.ObjectType{
 				AttrTypes: attrTypesMap(opts),
@@ -69,7 +73,9 @@ func BlockAll(ctx context.Context) schema.Block {
 // assigned to an attribute can be parsed as time.Duration.
 func Attributes(ctx context.Context, opts Opts) schema.Attribute {
 	return schema.SingleNestedAttribute{
-		Attributes: attributesMap(opts),
+		MarkdownDescription: opts.MarkdownDescription,
+		Description:         opts.Description,
+		Attributes:          attributesMap(opts),
 		CustomType: Type{
 			ObjectType: types.ObjectType{
 				AttrTypes: attrTypesMap(opts),

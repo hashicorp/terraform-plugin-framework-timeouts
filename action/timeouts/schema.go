@@ -21,7 +21,9 @@ const (
 // Opts is used as an argument to BlockWithOpts and AttributesWithOpts to indicate
 // whether supplied descriptions should override default descriptions.
 type Opts struct {
-	InvokeDescription string
+	MarkdownDescription string
+	Description         string
+	InvokeDescription   string
 }
 
 // BlockWithOpts returns a schema.Block containing attributes for `Invoke`, which is
@@ -30,7 +32,9 @@ type Opts struct {
 // Opts are used to override defaults.
 func BlockWithOpts(ctx context.Context, opts Opts) schema.Block {
 	return schema.SingleNestedBlock{
-		Attributes: attributesMap(opts),
+		MarkdownDescription: opts.MarkdownDescription,
+		Description:         opts.Description,
+		Attributes:          attributesMap(opts),
 		CustomType: Type{
 			ObjectType: types.ObjectType{
 				AttrTypes: attrTypesMap(),
@@ -59,7 +63,9 @@ func Block(ctx context.Context) schema.Block {
 // can be parsed as time.Duration. The supplied Opts are used to override defaults.
 func AttributesWithOpts(ctx context.Context, opts Opts) schema.Attribute {
 	return schema.SingleNestedAttribute{
-		Attributes: attributesMap(opts),
+		MarkdownDescription: opts.MarkdownDescription,
+		Description:         opts.Description,
+		Attributes:          attributesMap(opts),
 		CustomType: Type{
 			ObjectType: types.ObjectType{
 				AttrTypes: attrTypesMap(),
